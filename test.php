@@ -1,9 +1,9 @@
 <?php
 // ตั้งค่าโซนเวลาเป็นประเทศไทย
 date_default_timezone_set('Asia/Bangkok');
-
+<srftersgergertyrturthe>
+<jhk></jhk>r
 require_once 'db.php';
-dsfsdfssssssssssssssssss
 // เก็บข้อมูลวันที่และเวลาปัจจุบัน
 $date = date('Y-m-d');
 $time = date('H:i:s');
