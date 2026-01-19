@@ -263,12 +263,12 @@ if ($visitor) {
                     <nav id="navbar-example3" class="h-100 flex-column align-items-stretch">
                         <nav class="nav nav-pills flex-column">
                             <a class="nav-link smoothscroll" href="#item-1">หนังสืออิเล็กทรอนิกส์คืออะไร ? </a>
-                            <a class="nav-link smoothscroll" href="#item-2">Chapter 1: <strong>ห้องศูนย์ข้อมูลข่าวสาร</strong></a>
-                            <a class="nav-link smoothscroll" href="#item-3">Chapter 2: <strong>มุมอ่านหนังสือ</strong></a>
-                            <a class="nav-link smoothscroll" href="#item-4">Chapter 3: <strong>การให้บริการ</strong></a>
-                            <a class="nav-link smoothscroll" href="#item-5">Chapter 4: <strong>โครงสร้างองค์กร</strong></a>
-                            <a class="nav-link smoothscroll" href="#item-6">Chapter 5: <strong>บทบาทหน้าที่</strong></a>
-                            <a class="nav-link smoothscroll" href="#item-7">Chapter 6: <strong>ยุทธศาสตร์และแผนงาน</strong></a>
+                            <a class="nav-link smoothscroll" href="#item-2">1: <strong>ห้องศูนย์ข้อมูลข่าวสาร</strong></a>
+                            <a class="nav-link smoothscroll" href="#item-3">2: <strong>มุมอ่านหนังสือ</strong></a>
+                            <a class="nav-link smoothscroll" href="#item-4">3: <strong>การให้บริการ</strong></a>
+                            <a class="nav-link smoothscroll" href="#item-5">4: <strong>โครงสร้างองค์กร</strong></a>
+                            <a class="nav-link smoothscroll" href="#item-6">5: <strong>บทบาทหน้าที่</strong></a>
+                            <a class="nav-link smoothscroll" href="#item-7">6: <strong>ยุทธศาสตร์และแผนงาน</strong></a>
                         </nav>
                     </nav>
                 </div>
@@ -328,18 +328,114 @@ if ($visitor) {
                                 ทิศใต้ติดต่อกับเทศบาลตำบลท่าทองและองค์การบริหารส่วนตำบลบึงพระ
                                 ทิศตะวันออกติดต่อกับเทศบาลเมืองอรัญญิก
                                 ทิศตะวันตกติดต่อกับเทศบาลตำบลบ้านคลองและองค์การบริหารส่วนตำบลวัดจันทร์ </p>
-                            <p>ประชากรตามทะเบียนราษฎรมีจำนวนทั้งสิ้น 63,882 คน ประกอบด้วยประชากรชาย จำนวน 28,916 คน ประชากรหญิง จำนวน 34,966 คน จำนวนครัวเรือนทั้งหมด 36,974 ครัวเรือน (ข้อมูล ณ วันที่ 30 กันยายน 2564)</p>
-                            <blockquote class="blockquote">โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก<a rel="nofollow" href="https://phsmun.go.th/content/board/1" target="_blank">(คลิกเพื่อดูโครงสร้างองค์กร)</a></blockquote>
+                        
+
+                            <blockquote class="blockquote">โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก<a rel="nofollow" href="https://phsmun.go.th/organization" target="_blank">(คลิกเพื่อดูโครงสร้างองค์กร)</a></blockquote>
                         </div>
-                        <div class="scrollspy-example-item" id="item-6">
-                            <h5>บทบาทหน้าที่</h5>
-                            <iframe 
-                                src="https://phsmun.go.th/content/cate/2" 
-                                width="100%" 
-                                height="900px" 
-                                style="border: none;"
-                                class="scrollspy-example-item-image mb-4">
-                            </iframe>
+          <div class="scrollspy-example-item" id="item-6">
+<h5 class="mb-4 border-bottom pb-2">
+    อำนาจหน้าที่
+</h5>
+
+<!-- กฎหมายที่ 1 -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light fw-bold">
+        พระราชบัญญัติกำหนดแผนและขั้นตอนการกระจายอำนาจให้แก่องค์กรปกครองส่วนท้องถิ่น  
+        พ.ศ. 2542 แก้ไขเพิ่มเติม (ฉบับที่ 2) พ.ศ. 2549
+    </div>
+    <div class="card-body">
+        <ol class="ps-4 lh-lg">
+            <li>การจัดทำแผนพัฒนาท้องถิ่นของตนเอง</li>
+            <li>การจัดให้มีและบำรุงรักษาทางบก ทางน้ำ และทางระบายน้ำ</li>
+            <li>การจัดให้มีและควบคุมตลาด ท่าเทียบเรือ ท่าข้าม และที่จอดรถ</li>
+            <li>การสาธารณูปโภคและการก่อสร้างอื่นๆ</li>
+            <li>การสาธารณูปการ</li>
+            <li>การส่งเสริม การฝึก และประกอบอาชีพ</li>
+            <li>การพาณิชย์ และการส่งเสริมการลงทุน</li>
+            <li>การส่งเสริมการท่องเที่ยว</li>
+            <li>การจัดการศึกษา</li>
+            <li>การสังคมสงเคราะห์ และการพัฒนาคุณภาพชีวิตเด็ก สตรี คนชรา และผู้ด้อยโอกาส</li>
+            <li>การบำรุงรักษาศิลปะ จารีตประเพณี ภูมิปัญญาท้องถิ่น และวัฒนธรรมอันดีของท้องถิ่น</li>
+            <li>การปรับปรุงแหล่งชุมชนแออัดและการจัดการเกี่ยวกับที่อยู่อาศัย</li>
+            <li>การจัดให้มีและบำรุงรักษาสถานที่พักผ่อนหย่อนใจ</li>
+            <li>การส่งเสริมกีฬา</li>
+            <li>การส่งเสริมประชาธิปไตย ความเสมอภาค และสิทธิเสรีภาพของประชาชน</li>
+            <li>การส่งเสริมการมีส่วนร่วมของราษฎรในการพัฒนาท้องถิ่น</li>
+            <li>การรักษาความสะอาดและความเป็นระเบียบเรียบร้อยของบ้านเมือง</li>
+            <li>การกำจัดมูลฝอย สิ่งปฏิกูล และน้ำเสีย</li>
+            <li>การสาธารณสุข การอนามัยครอบครัว และการรักษาพยาบาล</li>
+            <li>การจัดให้มีและควบคุมสุสานและฌาปนสถาน</li>
+            <li>การควบคุมการเลี้ยงสัตว์</li>
+            <li>การจัดให้มีและควบคุมการฆ่าสัตว์</li>
+            <li>การรักษาความปลอดภัยและการอนามัยในสถานสาธารณะ</li>
+            <li>การจัดการทรัพยากรธรรมชาติและสิ่งแวดล้อม</li>
+            <li>การผังเมือง</li>
+            <li>การขนส่งและวิศวกรรมจราจร</li>
+            <li>การดูแลรักษาที่สาธารณะ</li>
+            <li>การควบคุมอาคาร</li>
+            <li>การป้องกันและบรรเทาสาธารณภัย</li>
+            <li>การรักษาความสงบเรียบร้อยและความปลอดภัยในชีวิตและทรัพย์สิน</li>
+            <li>กิจการอื่นใดเพื่อประโยชน์ของประชาชนตามที่กฎหมายกำหนด</li>
+        </ol>
+    </div>
+</div>
+
+<!-- กฎหมายที่ 2 -->
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light fw-bold">
+        พระราชบัญญัติเทศบาล พ.ศ. 2496  
+        แก้ไขเพิ่มเติมถึง (ฉบับที่ 14) พ.ศ. 2562
+    </div>
+    <div class="card-body">
+        <ol class="ps-4 lh-lg">
+            <li>รักษาความสงบเรียบร้อยของประชาชน</li>
+            <li>ดูแลความเป็นระเบียบเรียบร้อยและการจราจร</li>
+            <li>ให้มีและบำรุงทางบกและทางน้ำ</li>
+            <li>รักษาความสะอาดและกำจัดมูลฝอย สิ่งปฏิกูล</li>
+            <li>ป้องกันและระงับโรคติดต่อ</li>
+            <li>จัดให้มีเครื่องดับเพลิง</li>
+            <li>ส่งเสริมและสนับสนุนการศึกษา ศาสนา และการฝึกอบรม</li>
+            <li>ส่งเสริมการพัฒนาสตรี เด็ก เยาวชน ผู้สูงอายุ และผู้พิการ</li>
+            <li>บำรุงศิลปะ วัฒนธรรม และภูมิปัญญาท้องถิ่น</li>
+            <li>จัดให้มีน้ำสะอาดหรือการประปา</li>
+            <li>จัดให้มีโรงฆ่าสัตว์</li>
+            <li>จัดให้มีสถานพยาบาล</li>
+            <li>จัดให้มีและบำรุงทางระบายน้ำ</li>
+            <li>จัดให้มีส้วมสาธารณะ</li>
+            <li>จัดให้มีไฟฟ้าหรือแสงสว่าง</li>
+            <li>ดำเนินกิจการโรงรับจำนำ</li>
+            <li>จัดระเบียบการจราจร</li>
+            <li>สงเคราะห์มารดาและเด็ก</li>
+            <li>กิจการด้านสาธารณสุขอื่นที่จำเป็น</li>
+            <li>ควบคุมสุขลักษณะในสถานบริการ</li>
+            <li>จัดการเกี่ยวกับที่อยู่อาศัยและแหล่งเสื่อมโทรม</li>
+            <li>จัดให้มีและควบคุมตลาดและที่จอดรถ</li>
+            <li>การวางผังเมืองและควบคุมอาคาร</li>
+            <li>ส่งเสริมการท่องเที่ยว</li>
+            <li>หน้าที่อื่นตามที่กฎหมายกำหนด</li>
+        </ol>
+    </div>
+</div>
+
+    <!-- ข้อมูลประชากร -->
+    <section class="mb-3">
+        <h6 class="fw-bold">ข้อมูลประชากร</h6>
+        <p>
+            ประชากรตามทะเบียนราษฎร จำนวนทั้งสิ้น <strong>63,882 คน</strong><br>
+            ชาย 28,916 คน | หญิง 34,966 คน<br>
+            จำนวนครัวเรือน 36,974 ครัวเรือน<br>
+            <small>(ข้อมูล ณ วันที่ 30 กันยายน 2564)</small>
+        </p>
+    </section>
+
+    <blockquote class="blockquote">
+        โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก
+        <a href="https://phsmun.go.th/organization" target="_blank" rel="nofollow">
+            (คลิกเพื่อดูโครงสร้างองค์กร)
+        </a>
+    </blockquote>
+</div>
+
                             <blockquote class="blockquote">
                                 <h5>กฎหมายเกี่ยวกับการกระจายอำนาจให้แก่องค์กรปกครองส่วนท้องถิ่น</h5>
                                 <div class="law-item">
@@ -581,7 +677,7 @@ if ($visitor) {
                         </a>
                     </div>
                     <div class="col-lg-4 col-md-6 mb-4">
-                        <a href="https://phsmun.go.th/#services-more" class="news-link"
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScRTRl6XXbSv4AdoHHVcCGUzwzWdpq5zqQwaCuvqC0OY_4cKQ/viewform?usp=sharing&ouid=110606945034603320638" class="news-link"
                             target="_blank">
                             <div class="news-item">
                                 <img src="images/4.jpg" alt="News Image 2" class="img-fluid">
@@ -625,12 +721,12 @@ if ($visitor) {
                                     </div>
                                     <div id="videoContent2" style="display: block;">
                                         <iframe width="370" height="315"
-                                            src="https://www.youtube.com/embed/2u_CaOnXyEw?si=D6wW5RDQb3y5SwcD&start=21"
+                                            src="https://www.youtube.com/embed/IERpoyODLQc?si=4zktNFhWeEiIF0CQ"
                                             title="YouTube video player" frameborder="0"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                             referrerpolicy="strict-origin-when-cross-origin"
                                             allowfullscreen></iframe>
-                                        <a href="https://youtu.be/2u_CaOnXyEw?si=KAEEG0vzueqey4Zf" target="_blank">
+                                        <a href="https://youtu.be/IERpoyODLQc?si=IHjKOz052GnU7l9q" target="_blank">
                                             <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
                                         </a>
                                     </div>
