@@ -1,0 +1,654 @@
+
+/* ตารางหนังสือ */
+.book-table {
+    background: rgba(219, 133, 253, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin-top: 20px;
+}
+
+.book-table th,
+.book-table td {
+    text-align: center;
+    font: "font-family";
+    align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    padding: 10px 10px; /* เว้นระยะห่างบนล่างและซ้ายขวา */
+    transition: color 0.3s ease-in-out;
+    justify-content: center; /* จัดให้อยู่ตรงกลางแนวนอน */
+    padding: 10px 10px; /* เว้นระยะห่างบนล่างและซ้ายขวา */
+    box-sizing: border-box;
+    max-width: 100px; /* กำหนดความกว้างสูงสุดเพื่อไม่ให้ยาวเกินไป */
+    font-size: medium;
+    font-size: 1rem;
+}
+
+.book-table th {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+.day-mode .book-table th {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
+
+.book-table td {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+.day-mode .book-table td {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+}
+
+/* ปรับขนาดรูปภาพในตาราง */
+.book-table td img {
+    width: 100px; /* ขนาดความกว้างของรูปภาพ */
+    height: 150px; /* ขนาดความสูงของรูปภาพ */
+    border-radius: 1px;
+}
+
+.book-table tbody tr:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+.btn-custom {
+    background-color: #f39c12;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-custom:hover {
+    background-color: #d35400;
+    color: #fff;
+}
+
+.toggle-container {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+.toggle-btn {
+    background: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.close-btn {
+    background: red;
+    color: white;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .day-mode .toggle-btn {
+    background: #f1c40f;
+    color: #333;
+} */
+
+
+.news-section {
+    margin-top: 50px;
+}
+
+.news-section .news-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.news-section .news-item:hover {
+    transform: scale(1.05);
+}
+
+.news-section .news-item img {
+    width: 400dvh;
+    height: 250px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.news-section .news-content h5 {
+    margin: 0 0 10px;
+    color: #000000;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.news-section .news-content p {
+    margin: 0 0 10px;
+    color: #000000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    text-align: center;
+    /* ทำให้ข้อความอยู่ตรงกลาง */
+}
+
+.news-section .news-item a.news-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.news-item {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+}
+
+.news-section .news-item a.news-link:hover {
+    text-decoration: none;
+}
+/* ปรับวิดีโอให้สมดุลเมื่อขยายในหน้าต่าง */
+.news-item iframe {
+    width: 100%; /* ปรับให้ iframe ใช้ความกว้างเต็มของ container */
+    height: auto; /* ให้ความสูงของ iframe ปรับตามอัตราส่วน */
+  }
+.container {
+  max-width: 100%; /* ปรับให้ container ใช้ความกว้างเต็ม */
+}
+
+.col-lg-4, .col-md-6, .col-12 {
+  padding: 15px;
+}
+
+.news-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+.container {
+  max-width: 100%; /* ปรับให้ container ใช้ความกว้างเต็ม */
+}
+
+.col-lg-4, .col-md-6, .col-12 {
+  padding: 15px;
+}
+
+.news-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+.container {
+  max-width: 100%; /* ปรับให้ container ใช้ความกว้างเต็ม */
+}
+
+.col-lg-4, .col-md-6, .col-12 {
+  padding: 15px;
+}
+
+.news-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+.container {
+  max-width: 100%; /* ปรับให้ container ใช้ความกว้างเต็ม */
+}
+
+.col-lg-4, .col-md-6, .col-12 {
+  padding: 15px;
+}
+
+.news-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+}
+.container {
+    max-width: 100%; /* ปรับให้ container ใช้ความกว้างเต็ม */
+  }
+  
+  .col-lg-4, .col-md-6, .col-12 {
+    padding: 15px;
+  }
+  
+  .news-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .video-responsive {
+    position: relative;
+    padding-bottom: 56.25%; /* อัตราส่วน 16:9 */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+  }
+  
+  .video-responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+/* .day-mode .news-section .news-item {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.day-mode .news-section .news-item h5 {
+    color: #000;
+}
+
+.day-mode .news-section .news-item p {
+    color: #555;
+} */
+
+/* :root { */
+    /* CSS Variables สำหรับโหมดสว่าง */
+    /* --carousel-bg-light: #f9f9f9;
+    --carousel-caption-bg-light: rgba(0, 0, 0, 0.6);
+    --carousel-text-light: #ffffff; */
+    /* CSS Variables สำหรับโหมดมืด */
+    /* --carousel-bg-dark: #333;
+    --carousel-caption-bg-dark: rgba(255, 255, 255, 0.6);
+    --carousel-text-dark: #000000;
+} */
+/* ตั้งค่าขนาดและจัดกึ่งกลางข้อความ */
+.container .news-item p {
+    font-size: 18px; /* กำหนดขนาดตัวอักษรตามที่ต้องการ */
+    font-weight: bold; /* ทำให้ตัวอักษรหนาขึ้น (ถ้าต้องการ) */
+    text-align: center; /* จัดกึ่งกลางข้อความ */
+    margin-top: 10px; /* เว้นระยะห่างด้านบน */
+    /* color: #007bff; กำหนดสีตัวอักษร */
+    transition: color 0.3s ease-in-out; /* เพิ่มการเปลี่ยนสีแบบนุ่มนวล */
+}
+
+/* กำหนดการแสดงผลตามธีม
+body.light-mode {
+    --carousel-bg: var(--carousel-bg-light);
+    --carousel-caption-bg: var(--carousel-caption-bg-light);
+    --carousel-text-color: var(--carousel-text-light);
+}
+
+body.dark-mode {
+    --carousel-bg: var(--carousel-bg-dark);
+    --carousel-caption-bg: var(--carousel-caption-bg-dark);
+    --carousel-text-color: var(--carousel-text-dark);
+} */
+
+/* ส่วนแสดงหนังสือใน Carousel
+.carousel-container {
+    width: 100%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: var(--carousel-bg);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    transition: background-color 0.3s ease-in-out;
+} */
+
+/* รูปภาพหนังสือ
+.carousel-item img {
+    width: 500px;
+    height: 350px;
+    object-fit: fill;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+} */
+
+/* เอฟเฟกต์เมื่อวางเมาส์
+.carousel-item:hover img {
+    transform: scale(1.08);
+    transition: transform 0.3s ease-in-out;
+} */
+
+/* ข้อความบน Carousel
+.carousel-caption {
+    background-color: var(--carousel-caption-bg);
+    border-radius: 10px;
+    padding: 10px;
+    bottom: 20px;
+} */
+
+/* .carousel-caption h5,
+.carousel-caption p {
+    margin: 0;
+    color: var(--carousel-text-color);
+} */
+
+/* ปรับขนาด Carousel ให้เหมาะกับหน้าจอ
+@media (max-width: 1100px) {
+    .carousel-container {
+        width: 100%;
+    } */
+
+    /* .carousel-item img {
+        width: 920px;
+        height: 150px;
+    } */
+
+    /* .carousel-caption h5,
+    .carousel-caption p {
+        font-size: 12px;
+    }
+} */
+
+/* @media (min-width: 1300px) {
+    .carousel-item img {
+        width: 1100px;
+        height: 400px;
+    }
+} */
+
+.toggle-container {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+.toggle-btn {
+    background: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.close-btn {
+    background: red;
+    color: white;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .day-mode .toggle-btn {
+    background: #f1c40f;
+    color: #333;
+} */
+/* ฟุตเตอร์อยู่ที่ด้านล่างของหน้าจอ */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.footer {
+    background-color: rgba(255, 255, 255, 0); /* พื้นหลังสีเข้ม */
+    color: #ffffff; /* ข้อความสีขาว */
+    text-align: center;
+    padding: 20px 0;
+    width: 100vw; /* ความกว้างเต็มหน้าจอ */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 50px; /* เพิ่มระยะห่างจากเนื้อหา */
+    padding-top: 10px; /* เพิ่ม padding ด้านบน */
+}
+
+.footer-content p {
+    margin: 10px; /* ไม่มีระยะห่าง */
+    font-size: 1rem; /* ขนาดฟอนต์ */
+    box-sizing: border-box;
+}
+
+.footer .social-icons {
+    margin-top: 20px;
+}
+
+.footer .social-icons a {
+    color: #000000;
+    font-size: 3.0rem;
+    margin: 0 10px;
+    transition: color 0.3s;
+}
+
+.footer .social-icons a:hover {
+    color: #ffffff; /* เปลี่ยนสีเมื่อชี้เมาส์ */
+}
+/* ปุ่มรี สไตล์สำหรับปุ่มที่มีคลาส btn-warning */
+#resetBtn {
+    width: 150px; /* ปรับความกว้าง */
+    height: 40px; /* ปรับความสูง */
+    font-size: 16px; /* ปรับขนาดตัวอักษร */
+}
+/* สไตล์สำหรับปุ่มทั้งหมดที่ใช้คลาส btn */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* สไตล์สำหรับปุ่มที่มีคลาส btn-warning */
+.btn-warning {
+    background-color: #ffc107; /* สีเหลือง */
+    color: rgb(0, 0, 0); /* ข้อความสีขาว */
+}
+
+/* สไตล์สำหรับปุ่มที่มี ID resetBtn */
+#resetBtn {
+    font-size: 12px; /* ขนาดตัวอักษร */
+    font-weight: bold; /* ตัวอักษรหนา */
+}
+
+/* สไตล์สำหรับระยะห่างด้านล่าง */
+.mb-3 {
+    margin-bottom: 1rem; /* ระยะห่างด้านล่าง */
+}
+
+/* สไตล์สำหรับวิดีโอ */
+.hero-navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background: transparent;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2; /* ทำให้ container อยู่บนวิดีโอ */
+}
+
+.hero-section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.45); /* เพิ่มโอเวอร์เลย์สีเพื่อให้ข้อความอ่านง่าย */
+    z-index: 1;
+}
+
+#section_1 {
+    position: relative;
+    width: 100vw; /* ครอบคลุมความกว้างเต็มหน้าจอ */
+    height: 100vh; /* ครอบคลุมความสูงเต็มหน้าจอ */
+    overflow: hidden; /* ตัดส่วนเกิน */
+}
+
+#section_1 .hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw; /* ความกว้างเต็มหน้าจอ */
+    height: 100vh; /* ความสูงเต็มหน้าจอ */
+    object-fit: cover; /* ให้วิดีโอครอบคลุมพื้นที่โดยไม่เสียสัดส่วน */
+    transform: translate(-50%, -50%); /* จัดให้อยู่กึ่งกลาง */
+    z-index: -1; /* ทำให้วิดีโออยู่ข้างหลังเนื้อหาอื่นๆ */
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px; /* ความกว้างสูงสุด */
+    margin: 0 auto;
+    padding: 10px;
+    z-index: 2; /* ทำให้ข้อความและเนื้อหาอยู่บนวิดีโอ */
+}
+
+
+    /* .row {
+        display: flex;
+        align-items: center;
+    } */
+
+    .col-lg-6{
+        box-sizing: border-box;
+        padding: 15px;
+    }
+    .col-12 {
+        margin-top: -18px;
+    }
+
+    /* .hero-image {
+        padding-top: 20px;
+        padding-right: 10px;
+        width: 50%;
+        height: 50%;
+        border-radius: 8px;
+    } */
+
+    .hero-image-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h2.text-center.mb-4{
+        padding-top: 50px;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    
+    .col-lg-6{
+        margin-top: -0px;
+    }
+
+    #section_4 {
+        /* width: 60%;
+        max-width: 60%; */
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column; /* จัดเรียงเนื้อหาในแนวตั้ง */
+        align-items: center; /* จัดให้อยู่กึ่งกลางแนวนอน */
+    }
+.col-lg-5 {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out, background-position 0.3s ease-in-out;
+    box-sizing: border-box;
+    background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0.1));
+    background-size: 200%;
+    background-position: 0 0;
+}
+
+.col-lg-5:hover {
+    background-position: 100% 100%;
+    animation: alternate-reverse;
+}
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* สัดส่วน 16:9 */
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* การตั้งค่าสำหรับหน้าจอขนาดเล็ก */
+@media (max-width: 768px) {
+    .video-container {
+        padding-top: 75%; /* สัดส่วน 4:3 หากต้องการปรับเมื่อหน้าจอเล็กลง */
+    }
+}
+
+.text-justify {
+    text-align: justify;
+    text-justify: distribute;
+    letter-spacing: 0;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
+
+body {
+    font-family: 'Noto Sans Thai', sans-serif;
+}
+
+.img.img {
+    padding-bottom: 20px;
+}
+.img-fluid{
+    border-radius: 20px;
+}
+body {
+    font-family: Arial, sans-serif;
+    /* margin: 20px; */
+}
+
+#login-section, #admin-section {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
