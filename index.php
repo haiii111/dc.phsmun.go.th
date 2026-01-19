@@ -328,20 +328,19 @@ if ($visitor) {
                                 ทิศใต้ติดต่อกับเทศบาลตำบลท่าทองและองค์การบริหารส่วนตำบลบึงพระ
                                 ทิศตะวันออกติดต่อกับเทศบาลเมืองอรัญญิก
                                 ทิศตะวันตกติดต่อกับเทศบาลตำบลบ้านคลองและองค์การบริหารส่วนตำบลวัดจันทร์ </p>
-                        
-
+                                     <section class="mb-3">
+                        <h6 class="fw-bold">ข้อมูลประชากร</h6>
+                        <p>
+                            ประชากรตามทะเบียนราษฎร จำนวนทั้งสิ้น <strong>63,882 คน</strong><br>
+                            ชาย 28,916 คน | หญิง 34,966 คน<br>
+                            จำนวนครัวเรือน 36,974 ครัวเรือน<br>
+                            <small>(ข้อมูล ณ วันที่ 30 กันยายน 2564)</small>
+                        </p>
+                    </section>      
                             <blockquote class="blockquote">โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก<a rel="nofollow" href="https://phsmun.go.th/organization" target="_blank">(คลิกเพื่อดูโครงสร้างองค์กร)</a></blockquote>
                         </div>  
                          <!-- ข้อมูลประชากร -->
-    <section class="mb-3">
-        <h6 class="fw-bold">ข้อมูลประชากร</h6>
-        <p>
-            ประชากรตามทะเบียนราษฎร จำนวนทั้งสิ้น <strong>63,882 คน</strong><br>
-            ชาย 28,916 คน | หญิง 34,966 คน<br>
-            จำนวนครัวเรือน 36,974 ครัวเรือน<br>
-            <small>(ข้อมูล ณ วันที่ 30 กันยายน 2564)</small>
-        </p>
-    </section>
+ 
           <div class="scrollspy-example-item" id="item-6">
 <h5 class="mb-4 border-bottom pb-2">
     อำนาจหน้าที่
@@ -536,17 +535,10 @@ if ($visitor) {
                             <p class="text-justify"> ประกอบด้วยแผนยุทธศาสตร์,แผนพัฒนาท้องถิ่น,แผนการดำเนินงาน,ติดตามและประเมินผลแผนพัฒนา,แผนการบริหารจัดการความเสี่ยง,งบประมาณรายจ่าย,แผนอัตรากำลัง3ปี,แผนปฏิบัติการป้องกันการทุจริต,เทศบัญญัติรายจ่ายประจำปี,ติดตามประเมินผล,รายงานผลต่างๆ  </p>      
                             <blockquote class="blockquote">
                                 หนังสืออิเล็กทรอนิกส์และเอกสารที่เกี่ยวกับยุทธศาสตร์และแผนงาน
-                                <a rel="nofollow" href="https://phsmun.go.th/strategy" target="_blank">
+                                <a rel="nofollow" href="https://phsmun.go.th/plans" target="_blank">
                                     (คลิกเพื่อดาวน์โหลดหนังสืออิเล็กทรอนิกส์ยุทธศาสตร์และแผนงาน)
                                 </a>
                             </blockquote>
-                            <iframe 
-                                src="https://phsmun.go.th/strategy" 
-                                width="100%" 
-                                height="900px" 
-                                style="border: none;"
-                                class="scrollspy-example-item-image mb-4">
-                            </iframe>
                         </div>
                         <div class="container news-section">
                             <h4 class="text-center mb-4">ประกาศผลการพิจารณาจัดซื้อจัดจ้าง</h4>
