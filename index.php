@@ -331,7 +331,17 @@ if ($visitor) {
                         
 
                             <blockquote class="blockquote">โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก<a rel="nofollow" href="https://phsmun.go.th/organization" target="_blank">(คลิกเพื่อดูโครงสร้างองค์กร)</a></blockquote>
-                        </div>
+                        </div>  
+                         <!-- ข้อมูลประชากร -->
+    <section class="mb-3">
+        <h6 class="fw-bold">ข้อมูลประชากร</h6>
+        <p>
+            ประชากรตามทะเบียนราษฎร จำนวนทั้งสิ้น <strong>63,882 คน</strong><br>
+            ชาย 28,916 คน | หญิง 34,966 คน<br>
+            จำนวนครัวเรือน 36,974 ครัวเรือน<br>
+            <small>(ข้อมูล ณ วันที่ 30 กันยายน 2564)</small>
+        </p>
+    </section>
           <div class="scrollspy-example-item" id="item-6">
 <h5 class="mb-4 border-bottom pb-2">
     อำนาจหน้าที่
@@ -417,16 +427,7 @@ if ($visitor) {
     </div>
 </div>
 
-    <!-- ข้อมูลประชากร -->
-    <section class="mb-3">
-        <h6 class="fw-bold">ข้อมูลประชากร</h6>
-        <p>
-            ประชากรตามทะเบียนราษฎร จำนวนทั้งสิ้น <strong>63,882 คน</strong><br>
-            ชาย 28,916 คน | หญิง 34,966 คน<br>
-            จำนวนครัวเรือน 36,974 ครัวเรือน<br>
-            <small>(ข้อมูล ณ วันที่ 30 กันยายน 2564)</small>
-        </p>
-    </section>
+ 
 
     <blockquote class="blockquote">
         โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก
