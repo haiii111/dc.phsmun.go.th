@@ -3,12 +3,12 @@ date_default_timezone_set('Asia/Bangkok');
 // $host = 'mariadb_dctest';
 // $user = 'admin_dctest';
 // $password = 'DataCenter@2025';
-$dbname = 'dctest';
-// $host = 'localhost';
+// $dbname = 'dctest';
+$host = 'localhost';
 $host = 'localhost';
 $user = 'root';
 $password = ''; // ใส่รหัสผ่านฐานข้อมูลของคุณ
-// $dbname = 'library_system';
+$dbname = 'dctest';
 
 
 // เชื่อมต่อฐานข้อมูล
