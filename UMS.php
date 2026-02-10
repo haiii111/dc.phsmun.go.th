@@ -656,7 +656,6 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             }
         }
     </style>
-    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <div id="particles-js"></div>

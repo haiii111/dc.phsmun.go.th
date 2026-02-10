@@ -253,7 +253,6 @@ $total_pages = ceil($total_logs / $limit);
             }
         }
     </style>
-    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <div id="particles-js"></div>

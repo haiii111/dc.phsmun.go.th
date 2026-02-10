@@ -370,7 +370,6 @@ $result = $conn->query("SELECT * FROM items WHERE hidden = 1 ORDER BY id DESC");
             }
         }
     </style>
-    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <!-- Particle Background -->

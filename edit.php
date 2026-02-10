@@ -384,7 +384,6 @@ $pdfExists = !empty($item['pdf_file']) && file_exists($uploadDir . $item['pdf_fi
             }
         }
     </style>
-    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <!-- Particle Background -->

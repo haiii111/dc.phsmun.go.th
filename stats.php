@@ -562,7 +562,6 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             }
         }
     </style>
-    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -980,4 +979,3 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
     </script>
 </body>
 </html>
-

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // ตั้งค่าโซนเวลาเป็นประเทศไทย
 date_default_timezone_set('Asia/Bangkok');
 require_once 'db.php';

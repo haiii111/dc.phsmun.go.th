@@ -51,30 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>เข้าสู่ระบบ</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;600;700&family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-        <style>
-        :root {
-            color-scheme: light;
-            --bg-1: #faf7ff;
-            --bg-2: #f5f3ff;
-            --surface: #ffffff;
-            --surface-2: #f8fafc;
-            --primary: #8b5cf6;
-            --primary-2: #a78bfa;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --border: rgba(139, 92, 246, 0.2);
-            --shadow: 0 12px 28px rgba(139, 92, 246, 0.18);
-        }
+    <style>
         body {
-            font-family: "Noto Sans Thai", system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(1200px 600px at 10% -10%, rgba(139, 92, 246, 0.18), transparent 60%),
-                radial-gradient(1000px 500px at 100% 0%, rgba(167, 139, 250, 0.22), transparent 55%),
-                linear-gradient(180deg, #ffffff, var(--bg-2));
-            color: var(--text);
+            font-family: 'Noto Sans Thai', sans-serif;
+            background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #2d2d2d;
             min-height: 100vh;
             margin: 0;
             padding: 0;
@@ -83,47 +69,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             flex-direction: column;
         }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         #particles-js {
-            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
         }
         .container-fluid {
-            max-width: 520px;
-            padding: 24px;
-            margin: 32px auto;
-            background: var(--surface);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            max-width: 500px;
+            padding: 20px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 10;
         }
         h1 {
-            color: var(--primary);
-            font-family: "Kanit", "Noto Sans Thai", system-ui, -apple-system, sans-serif;
+            color: #4b0082;
             font-weight: 700;
             font-size: 2rem;
             text-align: center;
             margin-bottom: 1.5rem;
-            letter-spacing: 0.3px;
         }
         .alert-success {
-            background: rgba(34, 197, 94, 0.12);
-            color: #15803d;
-            border: 1px solid rgba(34, 197, 94, 0.4);
-            border-radius: 10px;
-            padding: 14px 16px;
+            background: rgba(0, 255, 136, 0.1);
+            color: blue;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
             position: relative;
         }
         .alert-danger {
-            background: rgba(239, 68, 68, 0.1);
-            color: #b91c1c;
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            border-radius: 10px;
-            padding: 14px 16px;
+            background: rgba(255, 85, 85, 0.1);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            border-radius: 8px;
+            padding: 15px;
             position: relative;
         }
         .alert .btn-close {
-            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231f2937'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3e%3cpath d='M.293.293a1 1 0 1 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707A1 1 0 0 1 .293.293Z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+            color: #1a1a1a;
             opacity: 1;
             font-size: 1.1rem;
             padding: 0.75rem;
@@ -132,63 +126,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             position: absolute;
             top: 10px;
             right: 10px;
-            cursor: pointer;
-        }
-        .form-label {
-            color: var(--text);
-            font-weight: 600;
+            cursor: pointer
+
         }
         .form-control, .input-group-text {
             background: #fff;
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 10px;
-            transition: all 0.2s;
-            font-weight: 500;
+            border: 1px solid #d1c4e9;
+            color: #2d2d2d;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 400;
             height: 40px;
-            font-size: 0.95rem;
-            box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08);
+            font-size: 0.9rem;
         }
         .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+            border-color: #5e2a96;
+            box-shadow: 0 0 8px rgba(94, 42, 150, 0.3);
             background: #fff;
         }
         .form-control::placeholder {
-            color: var(--muted);
+            color: #999;
         }
         .input-group-text {
-            background: #f5f3ff;
-            color: #4c1d95;
-            font-weight: 600;
+            background: #f0e6ff;
+            color: #4b0082;
+        }
+        .form-label {
+            color: #333;
+            font-weight: 500;
         }
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            background: #5e2a96;
             color: #ffffff;
-            border-radius: 999px;
+            border-radius: 8px;
             padding: 8px 16px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             border: none;
-            font-weight: 600;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             height: 40px;
-            font-size: 0.95rem;
-            box-shadow: 0 6px 14px rgba(139, 92, 246, 0.2);
+            font-size: 0.9rem;
         }
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28);
-        }
-        .btn:focus-visible,
-        .form-control:focus-visible {
-            outline: 3px solid rgba(139, 92, 246, 0.25);
-            outline-offset: 2px;
+            background: #4b2078;
+            box-shadow: 0 0 10px rgba(94, 42, 150, 0.5);
         }
         .sidebar {
-            background: #ffffff;
-            border-right: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 1px solid #d1c4e9;
             position: fixed;
             top: 0;
             left: -260px;
@@ -197,7 +184,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 100%;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
-            box-shadow: 8px 0 24px rgba(139, 92, 246, 0.18);
         }
         .sidebar.active {
             left: 0;
@@ -208,22 +194,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             left: 0;
             width: 40px;
             height: 40px;
-            background: var(--primary);
+            background: #5e2a96;
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 0 10px 10px 0;
+            border-radius: 0 8px 8px 0;
             z-index: 1001;
             transition: left 0.3s ease-in-out;
-            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25);
         }
         .sidebar.active ~ .sidebar-toggle {
             left: 260px;
         }
         .sidebar-toggle:hover {
-            background: #7c3aed;
+            background: #4b2078;
         }
         .sidebar-content {
             padding: 20px;
@@ -236,34 +221,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #4c1d95;
+            color: #4b0082;
             padding: 10px 12px;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 0.95rem;
             transition: background 0.2s, transform 0.2s;
-            font-weight: 600;
+            font-weight: 500;
         }
         .sidebar-item:hover {
-            background: rgba(139, 92, 246, 0.12);
-            color: var(--primary);
-            transform: translateX(4px);
+            background: #f0e6ff;
+            color: #5e2a96;
+            transform: translateX(5px);
         }
         .sidebar-item i {
-            font-size: 1.1rem;
-            color: var(--primary);
+            font-size: 1.2rem;
+            color: #5e2a96;
         }
-        @media (max-width: 576px) {
+        @media (max-width: 992px) {
             .container-fluid {
-                margin: 16px;
-                padding: 18px;
+                padding: 15px;
+                margin: 15px;
+            }
+            .sidebar {
+                width: 220px;
+                left: -220px;
+            }
+            .sidebar.active ~ .sidebar-toggle {
+                left: 220px;
             }
             h1 {
-                font-size: 1.7rem;
+                font-size: 1.8rem;
+            }
+            .form-control, .input-group-text {
+                font-size: 0.85rem;
+                height: 36px;
+            }
+            .btn-primary {
+                font-size: 0.85rem;
+                height: 36px;
+            }
+        }
+        @media (max-width: 576px) {
+            body {
+                font-size: 0.9rem;
+            }
+            .container-fluid {
+                padding: 10px;
+                margin: 10px;
+            }
+            .form-control, .input-group-text {
+                height: 34px;
+                font-size: 0.8rem;
+            }
+            .btn-primary {
+                height: 34px;
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            .sidebar-toggle {
+                width: 36px;
+                height: 36px;
+            }
+        }
+        @media (orientation: landscape) and (max-height: 500px) {
+            .container-fluid {
+                padding: 10px;
+                margin: 10px;
+            }
+            .form-control, .input-group-text {
+                height: 34px;
+                font-size: 0.85rem;
+            }
+            .btn-primary {
+                font-size: 0.85rem;
+                height: 34px;
             }
         }
     </style>
-    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -372,5 +407,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
-
-
