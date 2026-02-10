@@ -83,12 +83,42 @@ if ($visitor) {
             font-family: 'Prompt', sans-serif;
             font-weight: 600;
         }
-        h1.text-white.mb-4 {
-        margin-top: 16rem;
-        font-size: 3.6rem;
+        :root {
+            --text-base: clamp(15px, 0.95vw + 11px, 19px);
+            --text-small: clamp(13px, 0.55vw + 10px, 16px);
+            --text-tiny: clamp(12px, 0.35vw + 10px, 14px);
+            --h1: clamp(28px, 3.3vw + 16px, 56px);
+            --h2: clamp(22px, 2.5vw + 14px, 44px);
+            --h3: clamp(19px, 1.9vw + 12px, 34px);
+            --h4: clamp(17px, 1.5vw + 11px, 28px);
+            --h5: clamp(16px, 1.2vw + 10px, 24px);
+            --h6: clamp(15px, 1.0vw + 9px, 21px);
         }
-       .P {
-            font-size: 18.5px;
+        html { font-size: 100%; }
+        body {
+            font-size: var(--text-base);
+            line-height: 1.7;
+        }
+        p, a, li, span, div, input, select, button {
+            font-size: inherit;
+        }
+        .small, small {
+            font-size: var(--text-small);
+        }
+        .btn, .badge {
+            font-size: var(--text-tiny);
+        }
+        h1 { font-size: var(--h1); }
+        h2 { font-size: var(--h2); }
+        h3 { font-size: var(--h3); }
+        h4 { font-size: var(--h4); }
+        h5 { font-size: var(--h5); }
+        h6 { font-size: var(--h6); }
+        h1.text-white.mb-4 {
+            margin-top: 16rem;
+        }
+        .P {
+            font-size: var(--text-base);
         }
         /* ปรับฟอนต์สำหรับ Carousel และ Footer */
         .carousel-indicators button, .carousel-control-prev, .carousel-control-next, .footer p, .footer a {
@@ -99,15 +129,7 @@ if ($visitor) {
         .text-justify {
             text-align: justify;
         }
-        /* ปรับขนาดฟอนต์สำหรับหน้าจอเล็ก */
-        @media (max-width: 768px) {
-            body, p, a, li, span, div {
-                font-size: 0.95rem;
-            }
-            h1 { font-size: 2rem; }
-            h2 { font-size: 1.75rem; }
-            h3, h4, h5, h6 { font-size: 1.25rem; }
-        }
+        /* clamp() ?????????????????????????????????????? */
           /* CSS สำหรับ blockquote */
           .blockquote {
             padding: 20px;
@@ -155,8 +177,49 @@ if ($visitor) {
             margin-right: 5px;
             color: #dc3545;
         }
+        /* Responsive polish for the "book-section-info" block */
+        .book-section-info {
+            max-width: 680px;
+        }
+        .book-section-info .badge {
+            letter-spacing: 0.2px;
+        }
+        .book-section-info ul li i {
+            font-size: 1.05em;
+        }
+        .book-section-info .row .p-3 {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+        .book-section-info .info-cards {
+            row-gap: calc(1rem + 8px);
+        }
+        .book-section-info .info-card {
+            padding-top: calc(1rem + 4px);
+            padding-bottom: calc(1rem + 4px);
+        }
         /* ปรับระยะห่างสำหรับหน้าจอเล็ก */
         @media (max-width: 768px) {
+            .book-section-info {
+                max-width: 100%;
+            }
+            .book-section-info .d-flex.align-items-center {
+                flex-wrap: wrap;
+                gap: 6px 10px;
+            }
+            .book-section-info .row.g-3 {
+                row-gap: 12px;
+            }
+            .book-section-info .info-cards {
+                row-gap: calc(1rem + 4px);
+            }
+            .book-section-info .info-card {
+                padding-top: calc(1rem + 2px);
+                padding-bottom: calc(1rem + 2px);
+            }
+            .book-section-info .btn {
+                width: 100%;
+                text-align: center;
+            }
             .blockquote {
                 padding: 15px;
             }
@@ -244,8 +307,50 @@ if ($visitor) {
                 </div>
                 <div class="col-lg-7 col-12">
                     <div class="book-section-info">
-                        <h2 class="mb-4">แนะนำศูนย์ข้อมูล</h2>
-                        <p class="text-justify">ทำความรู้จักกับศูนย์ข้อมูลข่าวสารตามพระราชบัญญัติข้อมูลข่าวสารของราชการ พ.ศ.2540 <a rel="nofollow" href="https://web.parliament.go.th/assets/portals/79/filenewspar/79_467_file.pdf" target="_blank">(พ.ร.บ.)</a> กำหนดให้หน่วยงานของรัฐต้องจัดให้มีข้อมูลข่าวสารอย่างน้อยตามที่กฎหมายกำหนดไว้เพื่อให้ประชาชนสามารถเข้าตรวจสอบได้ โดยข้อมูลข่าวสารนี้จะต้องจัดเตรียมและจัดเก็บ ณ ที่ทำการของหน่วยงานที่เรียกว่าศูนย์ข้อมูลข่าวสารเพื่ออำนวยความสะดวกในการเข้าถึงข้อมูลของประชาชน</p>
+                        <!-- <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-primary me-2">ศูนย์ข้อมูลข่าวสาร</span>
+                            <span class="text-muted small">พ.ร.บ.ข้อมูลข่าวสารของราชการ พ.ศ.2540</span>
+                        </div> -->
+                        <h2 class="mb-3">แนะนำศูนย์ข้อมูล</h2>
+                        <p class="text-justify mb-4">ศูนย์ข้อมูลข่าวสารเป็นพื้นที่ที่หน่วยงานของรัฐต้องจัดเตรียมและจัดเก็บข้อมูลข่าวสารตามที่กฎหมายกำหนด เพื่อให้ประชาชนสามารถเข้าตรวจสอบข้อมูลได้อย่างสะดวก โปร่งใส และเป็นมาตรฐานเดียวกันทั่วประเทศ</p>
+                        <ul class="list-unstyled mb-4">
+                            <li class="d-flex mb-2">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span>รวบรวมเอกสารสำคัญให้ค้นหาได้ง่ายและเป็นระบบ</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span>สนับสนุนความโปร่งใสและสิทธิในการรับรู้ข้อมูลของประชาชน</span>
+                            </li>
+                            <li class="d-flex">
+                                <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                                <span>อำนวยความสะดวกในการเข้าถึงข้อมูล ณ ที่ทำการของหน่วยงาน</span>
+                            </li>
+                        </ul>
+                        <!-- <div class="row g-3 mb-4 info-cards">
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded h-100 bg-light info-card">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-book-open text-primary me-2"></i>
+                                        <strong>บทบาทหลัก</strong>
+                                    </div>
+                                    <p class="mb-0 small">จัดเตรียมและเผยแพร่ข้อมูลข่าวสารตามที่กฎหมายกำหนดไว้</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded h-100 bg-light info-card">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-user-check text-primary me-2"></i>
+                                        <strong>เพื่อประชาชน</strong>
+                                    </div>
+                                    <p class="mb-0 small">ช่วยให้ตรวจสอบข้อมูลได้ง่าย เพิ่มความเชื่อมั่นต่อภาครัฐ</p>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="d-flex flex-wrap align-items-center">
+                            <a class="btn btn-primary btn-sm me-3 mb-2" rel="nofollow" href="https://web.parliament.go.th/assets/portals/79/filenewspar/79_467_file.pdf" target="_blank">อ่านรายละเอียด พ.ร.บ.</a>
+                            <!-- <span class="text-muted small mb-2">ข้อมูลถูกจัดเก็บ ณ ที่ทำการของหน่วยงานเพื่อการเข้าถึงที่สะดวก</span> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -277,8 +382,8 @@ if ($visitor) {
                         class="scrollspy-example-2" tabindex="0">
                         <div class="scrollspy-example-item" id="item-1">
                             <h5>หนังสืออิเล็กทรอนิกส์คืออะไร ? </h5>
-                            <p class="text-justify"> หนังสือเล่ม: อยู่ในรูปแบบสิ่งพิมพ์ กระดาษที่สามารถจับต้องได้จริง และต้องใช้พื้นที่ในการจัดเก็บ </p>
-                            <p class="text-justify"> หนังสืออิเล็กทรอนิกส์ หรือ E-book: เป็นหนังสือที่อยู่ในรูปแบบดิจิทัล สามารถอ่านได้บนอุปกรณ์อิเล็กทรอนิกส์ เช่น คอมพิวเตอร์ แท็บเล็ต สมาร์ทโฟน หรือเครื่องอ่านหนังสือเฉพาะ (E-reader) หนังสืออิเล็กทรอนิกส์มีเนื้อหาคล้ายกับหนังสือเล่มปกติ แต่จะนำเสนอในรูปแบบที่อ่านง่ายบนหน้าจอ</p>
+                            <p><i class="fas fa-book text-primary me-2" aria-hidden="true"></i>หนังสือเล่ม: อยู่ในรูปแบบสิ่งพิมพ์ กระดาษที่สามารถจับต้องได้จริง และต้องใช้พื้นที่ในการจัดเก็บ</p>
+                            <p><i class="fas fa-tablet-alt text-warning me-2" aria-hidden="true"></i>หนังสืออิเล็กทรอนิกส์ หรือ E-book: เป็นหนังสือที่อยู่ในรูปแบบดิจิทัล สามารถอ่านได้บนอุปกรณ์อิเล็กทรอนิกส์ เช่น คอมพิวเตอร์ แท็บเล็ต สมาร์ทโฟน หรือเครื่องอ่านหนังสือเฉพาะ (E-reader) หนังสืออิเล็กทรอนิกส์มีเนื้อหาคล้ายกับหนังสือเล่มปกติ แต่จะนำเสนอในรูปแบบที่อ่านง่ายบนหน้าจอ</p>
                             <img src="images/Post.png" class="img-fluid d-block mx-auto" alt="Post">
                             <blockquote class="blockquote">หนังสืออิเล็กทรอนิกส์มีข้อดีหลายประการ เช่น พกพาสะดวก ประหยัดพื้นที่จัดเก็บ และยังช่วยลดการใช้กระดาษ ทำให้เป็นทางเลือกที่ดีสำหรับผู้ที่ชื่นชอบการอ่านและสนใจรักษาสิ่งแวดล้อม</blockquote>
                         </div>
@@ -299,7 +404,7 @@ if ($visitor) {
                         </div>
                         <div class="scrollspy-example-item" id="item-3">
                             <h5>มุมอ่านหนังสือ</h5>
-                            <p class="text-justify"> เป็นพื้นที่ที่จัดไว้ในห้องศูนย์ข้อมูลข่าวสารของหน่วยงานรัฐเพื่อให้ประชาชนสามารถนั่งอ่านเอกสารและข้อมูลต่างๆที่จัดเตรียมไว้ได้อย่างสะดวก มุมนี้จะมีการจัดโต๊ะ เก้าอี้และสิ่งอำนวยความสะดวกอื่นๆ ที่ช่วยให้ผู้เข้ามาใช้งานสามารถอ่านและศึกษาข้อมูลได้อย่างมีสมาธิและสะดวกสบาย</p>
+                            <p class="text-justify">เป็นพื้นที่ที่จัดไว้ในห้องศูนย์ข้อมูลข่าวสารของหน่วยงานรัฐ เพื่อให้ประชาชนสามารถนั่งอ่านเอกสารและข้อมูลต่างๆ ที่จัดเตรียมไว้ได้อย่างสะดวก มุมนี้มีการจัดโต๊ะ เก้าอี้ และสิ่งอำนวยความสะดวกอื่นๆ เพื่อให้ผู้ใช้งานสามารถอ่านและศึกษาข้อมูลได้อย่างมีสมาธิและสะดวกสบาย</p>
                             <div class="row align-items-center">
                                 <div class="col-lg-6 col-12">
                                     <img src="images/S__14655500.jpg" class="img-fluid" alt="">
@@ -323,7 +428,24 @@ if ($visitor) {
                         </div>
                         <div class="scrollspy-example-item" id="item-5">
                             <h5>โครงสร้างองค์กร</h5>
-                            <p class="text-justify">ขนาดและที่ตั้งเทศบาลนครพิษณุโลกเป็นองค์กรปกครองส่วนท้องถิ่นขนาดใหญ่ตั้งอยู่ในเขตอำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก มีพื้นที่ 18.26 ตารางกิโลเมตร ตั้งอยู่ในบริเวณภาคเหนือตอนล่างของประเทศไทย ตามแนวละติจูดที่ 16 องศาเหนือ 16 ลิปดาตะวันออก ห่างจากรุงเทพมหานคร ไปทางทิศเหนือประมาณ 377 กิโลเมตร มีอาณาเขตติดต่อกับพื้นที่ใกล้เคียง ดังนี้ ทิศเหนือติดต่อกับเทศบาลตำบลหัวรอและเทศบาลเมืองอรัญญิก ทิศใต้ติดต่อกับเทศบาลตำบลท่าทองและองค์การบริหารส่วนตำบลบึงพระ ทิศตะวันออกติดต่อกับเทศบาลเมืองอรัญญิก ทิศตะวันตกติดต่อกับเทศบาลตำบลบ้านคลองและองค์การบริหารส่วนตำบลวัดจันทร์ </p>
+                            <p class="text-justify">ขนาดและที่ตั้งเทศบาลนครพิษณุโลกเป็นองค์กรปกครองส่วนท้องถิ่นขนาดใหญ่ตั้งอยู่ในเขตอำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก มีพื้นที่ 18.26 ตารางกิโลเมตร ตั้งอยู่ในบริเวณภาคเหนือตอนล่างของประเทศไทย ตามแนวละติจูดที่ 16 องศาเหนือ 16 ลิปดาตะวันออก ห่างจากกรุงเทพมหานครไปทางทิศเหนือประมาณ 377 กิโลเมตร มีอาณาเขตติดต่อกับพื้นที่ใกล้เคียงดังนี้ ทิศเหนือติดต่อกับเทศบาลตำบลหัวรอและเทศบาลเมืองอรัญญิก ทิศใต้ติดต่อกับเทศบาลตำบลท่าทองและองค์การบริหารส่วนตำบลบึงพระ ทิศตะวันออกติดต่อกับเทศบาลเมืองอรัญญิก ทิศตะวันตกติดต่อกับเทศบาลตำบลบ้านคลองและองค์การบริหารส่วนตำบลวัดจันทร์</p>
+                            <div class="mini-map-card">
+                                <div class="mini-map-icon">
+                                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
+                                </div>
+                                <div class="mini-map-body">
+                                    <div class="mini-map-title">สรุปที่ตั้งโดยย่อ</div>
+                                    <div class="mini-map-detail">
+                                        พื้นที่ 18.26 ตร.กม. • ห่างจากกรุงเทพฯ ~377 กม. ไปทางเหนือ
+                                    </div>
+                                    <div class="mini-map-directions">
+                                        <span><strong>เหนือ:</strong> หัวรอ, อรัญญิก</span>
+                                        <span><strong>ใต้:</strong> ท่าทอง, บึงพระ</span>
+                                        <span><strong>ตะวันออก:</strong> อรัญญิก</span>
+                                        <span><strong>ตะวันตก:</strong> บ้านคลอง, วัดจันทร์</span>
+                                    </div>
+                                </div>
+                            </div>
                                      <section class="mb-3">
                         <h6 class="fw-bold">ข้อมูลประชากร</h6>
                         <p>
@@ -334,6 +456,15 @@ if ($visitor) {
                         </p>
                     </section>      
                             <blockquote class="blockquote">โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก<a rel="nofollow" href="https://phsmun.go.th/organization" target="_blank">(คลิกเพื่อดูโครงสร้างองค์กร)</a></blockquote>
+                            <!-- <div class="org-iframe">
+                                <iframe
+                                    src="https://complain2021.phsmun.go.th?username=centerpassword=1234"
+                                    title="โครงสร้างองค์กรเทศบาลนครพิษณุโลก"
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade"
+                                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                                ></iframe>
+                            </div> -->
                         </div>  
                          <!-- ข้อมูลประชากร -->
  
@@ -758,7 +889,7 @@ if ($visitor) {
                             <a class="footer-content" href="https://phsmun.go.th/frontpage">
                                 <img src="images/Phsmunlogo.png" class="img">
                             </a>
-                            <p>© 2025 ศูนย์ข้อมูลข่าวสารเทศบาลนครพิษณุโลก.</p>
+                            <p>© 2026 ศูนย์ข้อมูลข่าวสารเทศบาลนครพิษณุโลก.</p>
                             <p>1299 ถ.บรมไตรโลกนารถ 2 ต.ในเมือง อ.เมือง จ.พิษณุโลก 65000</p>
                             <p>โทรศัพท์: 0-5598-3221-28<br>
                                 แฟกซ์ : 0-5598-3332<br>

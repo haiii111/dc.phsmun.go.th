@@ -332,6 +332,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     </style>
+    <link href='css/styles.css' rel='stylesheet'>
 </head>
 <body>
     <!-- Particle Background -->
