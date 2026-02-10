@@ -381,15 +381,26 @@ if ($visitor) {
                     <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-smooth-scroll="true"
                         class="scrollspy-example-2" tabindex="0">
                         <div class="scrollspy-example-item" id="item-1">
-                            <h5>หนังสืออิเล็กทรอนิกส์คืออะไร ? </h5>
-                            <p><i class="fas fa-book text-primary me-2" aria-hidden="true"></i>หนังสือเล่ม: อยู่ในรูปแบบสิ่งพิมพ์ กระดาษที่สามารถจับต้องได้จริง และต้องใช้พื้นที่ในการจัดเก็บ</p>
-                            <p><i class="fas fa-tablet-alt text-warning me-2" aria-hidden="true"></i>หนังสืออิเล็กทรอนิกส์ หรือ E-book: เป็นหนังสือที่อยู่ในรูปแบบดิจิทัล สามารถอ่านได้บนอุปกรณ์อิเล็กทรอนิกส์ เช่น คอมพิวเตอร์ แท็บเล็ต สมาร์ทโฟน หรือเครื่องอ่านหนังสือเฉพาะ (E-reader) หนังสืออิเล็กทรอนิกส์มีเนื้อหาคล้ายกับหนังสือเล่มปกติ แต่จะนำเสนอในรูปแบบที่อ่านง่ายบนหน้าจอ</p>
-                            <img src="images/Post.png" class="img-fluid d-block mx-auto" alt="Post">
-                            <blockquote class="blockquote">หนังสืออิเล็กทรอนิกส์มีข้อดีหลายประการ เช่น พกพาสะดวก ประหยัดพื้นที่จัดเก็บ และยังช่วยลดการใช้กระดาษ ทำให้เป็นทางเลือกที่ดีสำหรับผู้ที่ชื่นชอบการอ่านและสนใจรักษาสิ่งแวดล้อม</blockquote>
+                            <div class="ebook-summary-card">
+                                <div class="card-head">
+                                    <h5>หนังสืออิเล็กทรอนิกส์คืออะไร?</h5>
+                                    <span class="tag"><i class="fas fa-book-open" aria-hidden="true"></i>E‑book</span>
+                                </div>
+                                <div class="card-body-grid">
+                                    <div class="card-text">
+                                        <p><i class="fas fa-book text-primary me-2" aria-hidden="true"></i>หนังสือเล่ม: อยู่ในรูปแบบสิ่งพิมพ์ กระดาษที่สามารถจับต้องได้จริง และต้องใช้พื้นที่ในการจัดเก็บ</p>
+                                        <p><i class="fas fa-tablet-alt text-warning me-2" aria-hidden="true"></i>หนังสืออิเล็กทรอนิกส์ หรือ E-book: เป็นหนังสือที่อยู่ในรูปแบบดิจิทัล สามารถอ่านได้บนอุปกรณ์อิเล็กทรอนิกส์ เช่น คอมพิวเตอร์ แท็บเล็ต สมาร์ทโฟน หรือเครื่องอ่านหนังสือเฉพาะ (E-reader) หนังสืออิเล็กทรอนิกส์มีเนื้อหาคล้ายกับหนังสือเล่มปกติ แต่จะนำเสนอในรูปแบบที่อ่านง่ายบนหน้าจอ</p>
+                                    </div>
+                                    <div class="card-media">
+                                        <img src="images/Post.png" class="img-fluid" alt="Post">
+                                    </div>
+                                </div>
+                                <blockquote class="blockquote compact">หนังสืออิเล็กทรอนิกส์มีข้อดีหลายประการ เช่น พกพาสะดวก ประหยัดพื้นที่จัดเก็บ และยังช่วยลดการใช้กระดาษ ทำให้เป็นทางเลือกที่ดีสำหรับผู้ที่ชื่นชอบการอ่านและสนใจรักษาสิ่งแวดล้อม</blockquote>
+                            </div>
                         </div>
                         <div class="scrollspy-example-item" id="item-2">
                             <h5>ห้องศูนย์ข้อมูลข่าวสาร</h5>
-                            <p class="text-justify"> ภายในห้องศูนย์ข้อมูลข่าวสารนี้จะมีเอกสารและข้อมูลที่เกี่ยวข้องกับการทำงานของหน่วยงานนั้นๆ ตามที่กฎหมายกำหนด เช่น ข้อมูลเกี่ยวกับงบประมาณ แผนงาน ผลการดำเนินงาน กฎระเบียบต่างๆ เป็นต้น เพื่อส่งเสริมความโปร่งใสและให้ประชาชนมีส่วนร่วมในการตรวจสอบข้อมูลของทางราชการ</p>
+                            <p class="text-justify">ภายในห้องศูนย์ข้อมูลข่าวสารจะรวบรวมเอกสารและข้อมูลที่เกี่ยวข้องกับการดำเนินงานของหน่วยงานตามที่กฎหมายกำหนด เช่น ข้อมูลงบประมาณ แผนงาน ผลการดำเนินงาน และกฎระเบียบต่าง ๆ เพื่อส่งเสริมความโปร่งใสและเปิดโอกาสให้ประชาชนร่วมตรวจสอบการทำงานของภาครัฐได้อย่างมีส่วนร่วม</p>
                             <div class="row">
                                 <div class="col-lg-6 col-12 mb-3">
                                     <img src="images/portrait-mature-smiling-authoress-sitting-desk.jpg"
@@ -404,7 +415,7 @@ if ($visitor) {
                         </div>
                         <div class="scrollspy-example-item" id="item-3">
                             <h5>มุมอ่านหนังสือ</h5>
-                            <p class="text-justify">เป็นพื้นที่ที่จัดไว้ในห้องศูนย์ข้อมูลข่าวสารของหน่วยงานรัฐ เพื่อให้ประชาชนสามารถนั่งอ่านเอกสารและข้อมูลต่างๆ ที่จัดเตรียมไว้ได้อย่างสะดวก มุมนี้มีการจัดโต๊ะ เก้าอี้ และสิ่งอำนวยความสะดวกอื่นๆ เพื่อให้ผู้ใช้งานสามารถอ่านและศึกษาข้อมูลได้อย่างมีสมาธิและสะดวกสบาย</p>
+                            <p class="text-justify indent-left">เป็นพื้นที่ภายในห้องศูนย์ข้อมูลข่าวสารของหน่วยงานรัฐ ที่จัดไว้เพื่อให้ประชาชนสามารถนั่งอ่านเอกสารและข้อมูลต่าง ๆ ได้อย่างสะดวก มุมนี้มีโต๊ะ เก้าอี้ และสิ่งอำนวยความสะดวกที่จำเป็น เพื่อช่วยให้ผู้ใช้งานอ่านและศึกษาข้อมูลได้อย่างมีสมาธิและสะดวกสบาย</p>
                             <div class="row align-items-center">
                                 <div class="col-lg-6 col-12">
                                     <img src="images/S__14655500.jpg" class="img-fluid" alt="">
@@ -428,32 +439,57 @@ if ($visitor) {
                         </div>
                         <div class="scrollspy-example-item" id="item-5">
                             <h5>โครงสร้างองค์กร</h5>
-                            <p class="text-justify">ขนาดและที่ตั้งเทศบาลนครพิษณุโลกเป็นองค์กรปกครองส่วนท้องถิ่นขนาดใหญ่ตั้งอยู่ในเขตอำเภอเมืองพิษณุโลก จังหวัดพิษณุโลก มีพื้นที่ 18.26 ตารางกิโลเมตร ตั้งอยู่ในบริเวณภาคเหนือตอนล่างของประเทศไทย ตามแนวละติจูดที่ 16 องศาเหนือ 16 ลิปดาตะวันออก ห่างจากกรุงเทพมหานครไปทางทิศเหนือประมาณ 377 กิโลเมตร มีอาณาเขตติดต่อกับพื้นที่ใกล้เคียงดังนี้ ทิศเหนือติดต่อกับเทศบาลตำบลหัวรอและเทศบาลเมืองอรัญญิก ทิศใต้ติดต่อกับเทศบาลตำบลท่าทองและองค์การบริหารส่วนตำบลบึงพระ ทิศตะวันออกติดต่อกับเทศบาลเมืองอรัญญิก ทิศตะวันตกติดต่อกับเทศบาลตำบลบ้านคลองและองค์การบริหารส่วนตำบลวัดจันทร์</p>
-                            <div class="mini-map-card">
-                                <div class="mini-map-icon">
-                                    <i class="fas fa-map-marked-alt" aria-hidden="true"></i>
-                                </div>
-                                <div class="mini-map-body">
-                                    <div class="mini-map-title">สรุปที่ตั้งโดยย่อ</div>
-                                    <div class="mini-map-detail">
-                                        พื้นที่ 18.26 ตร.กม. • ห่างจากกรุงเทพฯ ~377 กม. ไปทางเหนือ
+                            <p class="text-justify">เทศบาลนครพิษณุโลกเป็นองค์กรปกครองส่วนท้องถิ่นขนาดใหญ่ ตั้งอยู่ในเขตอำเภอเมือง จังหวัดพิษณุโลก มีพื้นที่ 18.26 ตารางกิโลเมตร อยู่ในบริเวณภาคเหนือตอนล่างของประเทศไทย ตามแนวละติจูดที่ 16 องศาเหนือ 16 ลิปดาตะวันออก และอยู่ห่างจากกรุงเทพมหานครไปทางทิศเหนือประมาณ 377 กิโลเมตร โดยมีอาณาเขตติดต่อกับพื้นที่ใกล้เคียงดังนี้: ทิศเหนือติดต่อเทศบาลตำบลหัวรอและเทศบาลเมืองอรัญญิก ทิศใต้ติดต่อเทศบาลตำบลท่าทองและองค์การบริหารส่วนตำบลบึงพระ ทิศตะวันออกติดต่อเทศบาลเมืองอรัญญิก และทิศตะวันตกติดต่อเทศบาลตำบลบ้านคลองและองค์การบริหารส่วนตำบลวัดจันทร์</p>
+                            <div class="location-infographic">
+                                <div class="info-card">
+                                    <div class="info-icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></div>
+                                    <div>
+                                        <div class="info-label">ที่ตั้ง</div>
+                                        <div class="info-value">อ.เมือง จ.พิษณุโลก</div>
                                     </div>
-                                    <div class="mini-map-directions">
-                                        <span><strong>เหนือ:</strong> หัวรอ, อรัญญิก</span>
-                                        <span><strong>ใต้:</strong> ท่าทอง, บึงพระ</span>
-                                        <span><strong>ตะวันออก:</strong> อรัญญิก</span>
-                                        <span><strong>ตะวันตก:</strong> บ้านคลอง, วัดจันทร์</span>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-icon"><i class="fas fa-ruler-combined" aria-hidden="true"></i></div>
+                                    <div>
+                                        <div class="info-label">พื้นที่</div>
+                                        <div class="info-value">18.26 ตร.กม.</div>
+                                    </div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-icon"><i class="fas fa-route" aria-hidden="true"></i></div>
+                                    <div>
+                                        <div class="info-label">ระยะทางจาก กทม.</div>
+                                        <div class="info-value">~377 กม. (ทิศเหนือ)</div>
+                                    </div>
+                                </div>
+                                <div class="info-card directions">
+                                    <div class="info-icon"><i class="fas fa-compass" aria-hidden="true"></i></div>
+                                    <div>
+                                        <div class="info-label">อาณาเขตติดต่อ</div>
+                                        <div class="info-grid">
+                                            <span><strong>เหนือ:</strong> หัวรอ, อรัญญิก</span>
+                                            <span><strong>ใต้:</strong> ท่าทอง, บึงพระ</span>
+                                            <span><strong>ตะวันออก:</strong> อรัญญิก</span>
+                                            <span><strong>ตะวันตก:</strong> บ้านคลอง, วัดจันทร์</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                       
                                      <section class="mb-3">
-                        <h6 class="fw-bold">ข้อมูลประชากร</h6>
-                        <p>
-                            ประชากรตามทะเบียนราษฎร จำนวนทั้งสิ้น <strong>63,882 คน</strong><br>
-                            ชาย 28,916 คน | หญิง 34,966 คน<br>
-                            จำนวนครัวเรือน 36,974 ครัวเรือน<br>
-                            <small>(ข้อมูล ณ วันที่ 30 กันยายน 2564)</small>
-                        </p>
+                        <div class="population-card">
+                            <div class="population-header">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                <h6 class="fw-bold mb-0">ข้อมูลประชากร</h6>
+                            </div>
+                            <div class="population-chips">
+                                <span class="chip"><i class="fas fa-user-friends" aria-hidden="true"></i>รวม 63,882 คน</span>
+                                <span class="chip"><i class="fas fa-male" aria-hidden="true"></i>ชาย 28,916 คน</span>
+                                <span class="chip"><i class="fas fa-female" aria-hidden="true"></i>หญิง 34,966 คน</span>
+                                <span class="chip"><i class="fas fa-home" aria-hidden="true"></i>ครัวเรือน 36,974</span>
+                            </div>
+                            <div class="population-footnote">ข้อมูล ณ วันที่ 30 กันยายน 2564</div>
+                        </div>
                     </section>      
                             <blockquote class="blockquote">โครงสร้างผู้บริหารและโครงสร้างสภาเทศบาลนครพิษณุโลก<a rel="nofollow" href="https://phsmun.go.th/organization" target="_blank">(คลิกเพื่อดูโครงสร้างองค์กร)</a></blockquote>
                             <!-- <div class="org-iframe">
@@ -659,7 +695,7 @@ if ($visitor) {
                         </div>
                         <div class="scrollspy-example-item" id="item-7">
                             <h5>ยุทธศาสตร์และแผนงาน</h5>
-                            <p class="text-justify"> ประกอบด้วยแผนยุทธศาสตร์,แผนพัฒนาท้องถิ่น,แผนการดำเนินงาน,ติดตามและประเมินผลแผนพัฒนา,แผนการบริหารจัดการความเสี่ยง,งบประมาณรายจ่าย,แผนอัตรากำลัง3ปี,แผนปฏิบัติการป้องกันการทุจริต,เทศบัญญัติรายจ่ายประจำปี,ติดตามประเมินผล,รายงานผลต่างๆ  </p>      
+                            <p class="text-justify">ประกอบด้วยแผนยุทธศาสตร์ แผนพัฒนาท้องถิ่น แผนการดำเนินงาน การติดตามและประเมินผลแผนพัฒนา แผนการบริหารจัดการความเสี่ยง งบประมาณรายจ่าย แผนอัตรากำลัง 3 ปี แผนปฏิบัติการป้องกันการทุจริต เทศบัญญัติรายจ่ายประจำปี การติดตามประเมินผล และรายงานผลต่าง ๆ</p>      
                             <blockquote class="blockquote">
                                 หนังสืออิเล็กทรอนิกส์และเอกสารที่เกี่ยวกับยุทธศาสตร์และแผนงาน
                                 <a rel="nofollow" href="https://phsmun.go.th/plans" target="_blank">
