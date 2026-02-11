@@ -429,22 +429,21 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             gap: 8px;
             align-items: center;
         }
-        .pagination .pagination-control {
-            background: var(--bg);
-            border: none;
+        .pagination .page-link {
+            background: #ffffff;
+            border: 2px solid rgba(139, 92, 246, 0.45);
             color: var(--primary-3);
             margin: 0 5px;
-            border-radius: 50%;
-            transition: all 0.3s;
-            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 600;
             font-size: 0.9rem;
+            min-width: 36px;
+            text-align: center;
         }
-        .pagination .pagination-control:hover {
-            background: #5e2a96;
-            color: #fff;
-        }
+        .pagination .page-link:hover,
         .pagination .page-item.active .page-link {
-            background: #5e2a96;
+            background: var(--primary-2);
             color: #fff;
         }
         .sidebar {
@@ -589,7 +588,20 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
         #particles-js { display: none !important; }
         .container-fluid { background: var(--surface) !important; border: 1px solid var(--border) !important; box-shadow: var(--shadow) !important; border-radius: 16px !important; }
         .table th { background: linear-gradient(135deg, #ede9fe, #e9d5ff) !important; color: #4c1d95 !important; font-weight: 700 !important; }
-        .btn { border-radius: 999px !important; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18) !important; }
+        .btn {
+            border-radius: 12px !important;
+            box-shadow: 0 6px 14px rgba(139, 92, 246, 0.18) !important;
+            border: 1px solid transparent !important;
+            transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 22px rgba(139, 92, 246, 0.22) !important;
+        }
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 14px rgba(139, 92, 246, 0.18) !important;
+        }
         .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)) !important; color: #ffffff !important; }
         .btn-primary:hover { box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28) !important; transform: translateY(-1px); }
         .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: #ffffff !important; }
@@ -597,6 +609,8 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
         .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; color: #1f2937 !important; }
         .btn-info { background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important; color: #ffffff !important; }
         .btn-copy { background: linear-gradient(135deg, #94a3b8, #64748b) !important; color: #ffffff !important; }
+        .btn-sm { height: 32px; font-size: 0.82rem; padding: 4px 10px; }
+        .btn .fas, .btn .bi { font-size: 0.95em; }
         .form-control, .form-select { border: 1px solid var(--border) !important; border-radius: 10px !important; box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08) !important; }
         .form-control:focus, .form-select:focus { border-color: var(--primary-2) !important; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important; }
     </style>
@@ -743,15 +757,15 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="pagination-control" href="?page=<?= $page - 1 ?>" aria-label="ก่อนหน้า"><i class="fas fa-chevron-left"></i></a>
+                    <a class="page-link" href="?page=<?= $page - 1 ?>" aria-label="ก่อนหน้า"><i class="fas fa-chevron-left"></i></a>
                 </li>
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                     <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                        <a class="pagination-control" href="?page=<?= $i ?>"><?= $i ?></a>
+                        <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
                     </li>
                 <?php endfor; ?>
                 <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                    <a class="pagination-control" href="?page=<?= $page + 1 ?>" aria-label="ถัดไป"><i class="fas fa-chevron-right"></i></a>
+                    <a class="page-link" href="?page=<?= $page + 1 ?>" aria-label="ถัดไป"><i class="fas fa-chevron-right"></i></a>
                 </li>
             </ul>
         </nav>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 date_default_timezone_set('Asia/Bangkok');
 include 'auth.php'; // Include auth.php for session management
@@ -175,6 +175,56 @@ $row = $result->fetch_assoc();
 $totalYearly = $row ? (int)$row['total'] : 0;
 $result->free();
 $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
+
+function fetch_single_value(mysqli $conn, string $sql, string $types = '', array $params = []): int
+{
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return 0;
+    }
+    if ($types !== '' && !empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $value = 0;
+    if ($result) {
+        $row = $result->fetch_assoc();
+        if ($row) {
+            $value = (int)($row['total'] ?? 0);
+        }
+        $result->free();
+    }
+    $stmt->close();
+    return $value;
+}
+
+$today = date('Y-m-d');
+$currentMonth = date('m');
+$currentYear = date('Y');
+
+$todayVisits = fetch_single_value(
+    $conn,
+    "SELECT SUM(count) AS total FROM visitors WHERE visit_date = ?",
+    "s",
+    [$today]
+);
+$monthVisits = fetch_single_value(
+    $conn,
+    "SELECT SUM(count) AS total FROM visitors WHERE visit_month = ? AND visit_year = ?",
+    "ss",
+    [$currentMonth, $currentYear]
+);
+$yearVisits = fetch_single_value(
+    $conn,
+    "SELECT SUM(count) AS total FROM visitors WHERE visit_year = ?",
+    "s",
+    [$currentYear]
+);
+$allVisits = fetch_single_value(
+    $conn,
+    "SELECT SUM(count) AS total FROM visitors"
+);
 ?>
 
 <!DOCTYPE html>
@@ -302,8 +352,49 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             border-radius: 10px;
             padding: 14px 16px;
         }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.12), rgba(255, 255, 255, 0.9));
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 18px rgba(139, 92, 246, 0.12);
+        }
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--primary-3);
+            font-size: 1.2rem;
+        }
+        .stat-label {
+            color: var(--muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .stat-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary-3);
+        }
         @media (max-width: 992px) {
             .container, .container-fluid { margin: 16px; padding: 16px; }
+            .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 576px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
         }
             .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); color: #ffffff; }
         .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; }
@@ -400,12 +491,12 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
     <!-- Welcome Message -->
     <!-- <?php if (isAdmin()): ?> -->
         <!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ยินดีต้อนรับ ผู้ดูแลระบบ! 👑
+            ยินดีต้อนรับ ผู้ดูแลระบบ!'
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div> -->
     <!-- <?php elseif (isUser()): ?> -->
         <!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ยินดีต้อนรับ ผู้ใช้ทั่วไป! 👤
+            ยินดีต้อนรับ ผู้ใช้ทั่วไป!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div> -->
     <!-- <?php endif; ?> -->
@@ -420,71 +511,97 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-content">
-            <a href="#" id="openPopup" class="sidebar-item"><i class="bi bi-person-circle"></i> เข้าสู่ระบบสำหรับเจ้าหน้าที่</a>
-            <a href="UMS.php" class="sidebar-item"><i class="bi bi-people"></i> ระบบจัดการสมาชิก</a>
-            <a href="stats.php" class="sidebar-item"><i class="bi bi-bar-chart"></i> สถิติผู้เยี่ยมชมเว็บไซต์</a>
-            <a href="hidden_items.php" class="sidebar-item"><i class="bi bi-archive"></i> กู้คืนข้อมูล</a>
-            <a href="https://dc.phsmun.go.th/" class="sidebar-item"><i class="bi bi-house"></i> หน้าหลัก</a>
-        </div>
+    <div class="sidebar-content">
+        <a href="#" id="openPopup" class="sidebar-item"><i class="bi bi-person-circle"></i> เข้าสู่ระบบสำหรับเจ้าหน้าที่</a>
+        <a href="UMS.php" class="sidebar-item"><i class="bi bi-people"></i> ระบบจัดการสมาชิก</a>
+        <a href="stats.php" class="sidebar-item"><i class="bi bi-bar-chart"></i> สถิติผู้เยี่ยมชมเว็บไซต์</a>
+        <a href="hidden_items.php" class="sidebar-item"><i class="bi bi-archive"></i> กู้คืนข้อมูล</a>
+        <a href="https://dc.phsmun.go.th/" class="sidebar-item"><i class="bi bi-house"></i> หน้าหลัก</a>
     </div>
-    <div class="sidebar-toggle"><span>☰</span></div>
+</div>
+<div class="sidebar-toggle"><span>☰</span></div>
 
     <!-- Popup for Login Confirmation -->
     <div id="customPopup" class="popup-overlay">
-        <div class="popup-box">
-            <div class="popup-header">
-                <h5 class="popup-title">ยืนยันการเข้าสู่ระบบ</h5>
-                <button type="button" class="btn-close" id="closePopup" aria-label="Close"></button>
-            </div>
-            <div class="popup-body">คุณต้องการเข้าสู่ระบบสำหรับเจ้าหน้าที่หรือไม่?</div>
-            <div class="popup-footer">
-                <button type="button" class="btn btn-secondary" id="closePopupBtn">ยกเลิก</button>
-                <a href="login.php" class="btn btn-success">ยืนยัน</a>
-            </div>
+    <div class="popup-box">
+        <div class="popup-header">
+            <h5 class="popup-title">ยืนยันการเข้าสู่ระบบ</h5>
+            <button type="button" class="btn-close" id="closePopup" aria-label="Close"></button>
         </div>
+        <div class="popup-body">คุณต้องการเข้าสู่ระบบสำหรับเจ้าหน้าที่หรือไม่?</div>
+        <div class="popup-footer">
+            <button type="button" class="btn btn-secondary" id="closePopupBtn">ยกเลิก</button>
+            <a href="login.php" class="btn btn-success">ยืนยัน</a>
+        </div>
+    </div>
+</div>
     </div>
 
     <div class="container">
         <h1 class="text-center my-4">สถิติผู้เข้าชมเว็บไซต์</h1>
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <span class="stat-icon"><i class="bi bi-calendar-check"></i></span>
+                <div>
+                    <div class="stat-label">วันนี้</div>
+                    <div class="stat-value"><?= number_format($todayVisits) ?></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon"><i class="bi bi-calendar3"></i></span>
+                <div>
+                    <div class="stat-label">เดือนนี้</div>
+                    <div class="stat-value"><?= number_format($monthVisits) ?></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon"><i class="bi bi-calendar3-week"></i></span>
+                <div>
+                    <div class="stat-label">ปีนี้</div>
+                    <div class="stat-value"><?= number_format($yearVisits) ?></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon"><i class="bi bi-bar-chart-line"></i></span>
+                <div>
+                    <div class="stat-label">ทั้งหมด</div>
+                    <div class="stat-value"><?= number_format($allVisits) ?></div>
+                </div>
+            </div>
+        </div>
 
         <!-- Daily Visits -->
         <h2 id="daily-section">ประจำวัน/ผู้เข้าชม</h2>
         <form class="d-flex flex-column flex-md-row align-items-stretch gap-2 mb-3" method="GET">
-            <div class="input-group flex-column flex-md-row gap-2">
-                <input type="text" name="daily_search" class="form-control" placeholder="🔍 ค้นหา..." value="<?= htmlspecialchars($dailySearch) ?>">
-                <select name="daily_filter" class="form-select" style="width: 150px;">
-                    <option value="all" <?= $dailyFilter === 'all' ? 'selected' : '' ?>>ทั้งหมด</option>
-                    <option value="date" <?= $dailyFilter === 'date' ? 'selected' : '' ?>>วันที่</option>
-                    <option value="ip" <?= $dailyFilter === 'ip' ? 'selected' : '' ?>>IP Address</option>
-                </select>
-                <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-search"></i> ค้นหา</button>
-                <a href="?" class="btn btn-secondary flex-shrink-0"><i class="bi bi-arrow-clockwise"></i> รีเซ็ต</a>
-            </div>
-        </form>
+    <div class="input-group flex-column flex-md-row gap-2">
+        <input type="text" name="yearly_search" class="form-control" placeholder="🔍 ค้นหา..." value="<?= htmlspecialchars($yearlySearch) ?>">
+        <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-search"></i> ค้นหา</button>
+        <a href="?" class="btn btn-secondary flex-shrink-0"><i class="bi bi-arrow-clockwise"></i> รีเซ็ต</a>
+    </div>
+</form>
         <table class="table table-striped table-hover">
             <thead>
-                <tr>
-                    <th colspan="4">
-                        <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
-                            <label for="items_per_page_daily" class="fw-semibold mb-0">แสดงต่อหน้า:</label>
-                            <select id="items_per_page_daily" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
-                                <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
-                                <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
-                                <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
-                                <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
-                            </select>
-                            <input type="hidden" name="daily_search" value="<?= htmlspecialchars($dailySearch) ?>">
-                            <input type="hidden" name="daily_filter" value="<?= htmlspecialchars($dailyFilter) ?>">
-                        </form>
-                    </th>
-                </tr>
-                <tr>
-                    <th>วันที่</th>
-                    <th>เวลา</th>
-                    <th>IP Address</th>
-                    <th>ผู้เข้าชม</th>
-                </tr>
+    <tr>
+        <th colspan="4">
+            <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
+                <label for="items_per_page_daily" class="fw-semibold mb-0">แสดงต่อหน้า:</label>
+                <select id="items_per_page_daily" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
+                    <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
+                    <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
+                    <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                </select>
+                <input type="hidden" name="daily_search" value="<?= htmlspecialchars($dailySearch) ?>">
+                <input type="hidden" name="daily_filter" value="<?= htmlspecialchars($dailyFilter) ?>">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th>วันที่</th>
+        <th>เวลา</th>
+        <th>IP Address</th>
+        <th>ผู้เข้าชม</th>
+    </tr>
             </thead>
             <tbody>
                 <?php if (count($daily_visits) > 0): ?>
@@ -535,39 +652,34 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
         <!-- Monthly Visits -->
         <h2 id="monthly-section">รายเดือน/ผู้เข้าชม</h2>
         <form class="d-flex flex-column flex-md-row align-items-stretch gap-2 mb-3" method="GET">
-            <div class="input-group flex-column flex-md-row gap-2">
-                <input type="text" name="monthly_search" class="form-control" placeholder="🔍 ค้นหา..." value="<?= htmlspecialchars($monthlySearch) ?>">
-                <select name="monthly_filter" class="form-select" style="width: 150px;">
-                    <option value="all" <?= $monthlyFilter === 'all' ? 'selected' : '' ?>>ทั้งหมด</option>
-                    <option value="month" <?= $monthlyFilter === 'month' ? 'selected' : '' ?>>เดือน</option>
-                    <option value="year" <?= $monthlyFilter === 'year' ? 'selected' : '' ?>>ปี</option>
-                </select>
-                <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-search"></i> ค้นหา</button>
-                <a href="?" class="btn btn-secondary flex-shrink-0"><i class="bi bi-arrow-clockwise"></i> รีเซ็ต</a>
-            </div>
-        </form>
+    <div class="input-group flex-column flex-md-row gap-2">
+        <input type="text" name="yearly_search" class="form-control" placeholder="🔍 ค้นหา..." value="<?= htmlspecialchars($yearlySearch) ?>">
+        <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-search"></i> ค้นหา</button>
+        <a href="?" class="btn btn-secondary flex-shrink-0"><i class="bi bi-arrow-clockwise"></i> รีเซ็ต</a>
+    </div>
+</form>
         <table class="table table-striped table-hover">
             <thead>
-                <tr>
-                    <th colspan="3">
-                        <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
-                            <label for="items_per_page_monthly" class="fw-semibold mb-0">แสดงต่อหน้า:</label>
-                            <select id="items_per_page_monthly" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
-                                <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
-                                <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
-                                <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
-                                <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
-                            </select>
-                            <input type="hidden" name="monthly_search" value="<?= htmlspecialchars($monthlySearch) ?>">
-                            <input type="hidden" name="monthly_filter" value="<?= htmlspecialchars($monthlyFilter) ?>">
-                        </form>
-                    </th>
-                </tr>
-                <tr>
-                    <th>เดือน</th>
-                    <th>ปี</th>
-                    <th>จำนวนผู้เข้าชม</th>
-                </tr>
+    <tr>
+        <th colspan="3">
+            <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
+                <label for="items_per_page_monthly" class="fw-semibold mb-0">แสดงต่อหน้า:</label>
+                <select id="items_per_page_monthly" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
+                    <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
+                    <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
+                    <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                </select>
+                <input type="hidden" name="monthly_search" value="<?= htmlspecialchars($monthlySearch) ?>">
+                <input type="hidden" name="monthly_filter" value="<?= htmlspecialchars($monthlyFilter) ?>">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th>เดือน</th>
+        <th>ปี</th>
+        <th>จำนวนผู้เข้าชม</th>
+    </tr>
             </thead>
             <tbody>
                 <?php if (count($monthly_visits) > 0): ?>
@@ -612,37 +724,37 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             </ul>
         </nav>
         <?php endif; ?>
-        <p class="text-end">จำนวนข้อมูลทั้งหมด: <?= $totalMonthly ?> รายการ</p>
+        <p class="text-end">จำนวนข้อมูลทั้งหมด: <?= $totalDaily ?> รายการ</p>
 
         <!-- Yearly Visits -->
         <h2 id="yearly-section">รายปี/ผู้เข้าชม</h2>
         <form class="d-flex flex-column flex-md-row align-items-stretch gap-2 mb-3" method="GET">
-            <div class="input-group flex-column flex-md-row gap-2">
-                <input type="text" name="yearly_search" class="form-control" placeholder="🔍 ค้นหา..." value="<?= htmlspecialchars($yearlySearch) ?>">
-                <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-search"></i> ค้นหา</button>
-                <a href="?" class="btn btn-secondary flex-shrink-0"><i class="bi bi-arrow-clockwise"></i> รีเซ็ต</a>
-            </div>
-        </form>
+    <div class="input-group flex-column flex-md-row gap-2">
+        <input type="text" name="yearly_search" class="form-control" placeholder="🔍 ค้นหา..." value="<?= htmlspecialchars($yearlySearch) ?>">
+        <button type="submit" class="btn btn-primary flex-shrink-0"><i class="bi bi-search"></i> ค้นหา</button>
+        <a href="?" class="btn btn-secondary flex-shrink-0"><i class="bi bi-arrow-clockwise"></i> รีเซ็ต</a>
+    </div>
+</form>
         <table class="table table-striped table-hover">
             <thead>
-                <tr>
-                    <th colspan="2">
-                        <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
-                            <label for="items_per_page_yearly" class="fw-semibold mb-0">แสดงต่อหน้า:</label>
-                            <select id="items_per_page_yearly" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
-                                <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
-                                <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
-                                <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
-                                <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
-                            </select>
-                            <input type="hidden" name="yearly_search" value="<?= htmlspecialchars($yearlySearch) ?>">
-                        </form>
-                    </th>
-                </tr>
-                <tr>
-                    <th>ปี</th>
-                    <th>จำนวนผู้เข้าชม</th>
-                </tr>
+    <tr>
+        <th colspan="2">
+            <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
+                <label for="items_per_page_yearly" class="fw-semibold mb-0">แสดงต่อหน้า:</label>
+                <select id="items_per_page_yearly" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
+                    <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
+                    <option value="10" <?= $itemsPerPage == 10 ? 'selected' : '' ?>>10</option>
+                    <option value="20" <?= $itemsPerPage == 20 ? 'selected' : '' ?>>20</option>
+                    <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                </select>
+                <input type="hidden" name="yearly_search" value="<?= htmlspecialchars($yearlySearch) ?>">
+            </form>
+        </th>
+    </tr>
+    <tr>
+        <th>ปี</th>
+        <th>จำนวนผู้เข้าชม</th>
+    </tr>
             </thead>
             <tbody>
                 <?php if (count($yearly_visits) > 0): ?>
@@ -686,7 +798,7 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             </ul>
         </nav>
         <?php endif; ?>
-        <p class="text-end">จำนวนข้อมูลทั้งหมด: <?= $totalYearly ?> รายการ</p>
+        <p class="text-end">จำนวนข้อมูลทั้งหมด: <?= $totalDaily ?> รายการ</p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -810,5 +922,10 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
     </script>
 </body>
 </html>
+
+
+
+
+
 
 
