@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // login.php
 session_start();
 include 'db.php';
@@ -55,6 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f5ff;
+            --primary: #a78bfa;
+            --primary-2: #8b5cf6;
+            --primary-3: #7c3aed;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: rgba(139, 92, 246, 0.25);
+            --shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
+        }
         body {
             font-family: 'Noto Sans Thai', sans-serif;
             background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
@@ -298,6 +311,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 height: 34px;
             }
         }
+        /* e-Book theme alignment overrides */
+        body { background: var(--bg) !important; color: var(--text) !important; line-height: 1.7; }
+        #particles-js { display: none !important; }
+        .container, .container-fluid { background: var(--surface) !important; border: 1px solid var(--border) !important; box-shadow: var(--shadow) !important; border-radius: 16px !important; }
+        .table th { background: linear-gradient(135deg, #ede9fe, #e9d5ff) !important; color: #4c1d95 !important; font-weight: 700 !important; }
+        .btn { border-radius: 999px !important; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18) !important; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)) !important; color: #ffffff !important; }
+        .btn-primary:hover { box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28) !important; transform: translateY(-1px); }
+        .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: #ffffff !important; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626) !important; color: #ffffff !important; }
+        .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; color: #1f2937 !important; }
+        .btn-info { background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important; color: #ffffff !important; }
+        .btn-copy { background: linear-gradient(135deg, #94a3b8, #64748b) !important; color: #ffffff !important; }
+        .form-control, .form-select { border: 1px solid var(--border) !important; border-radius: 10px !important; box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08) !important; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-2) !important; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important; }
     </style>
 </head>
 <body>

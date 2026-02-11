@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include 'db.php';
 include 'auth.php';
@@ -246,12 +246,25 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f5ff;
+            --primary: #a78bfa;
+            --primary-2: #8b5cf6;
+            --primary-3: #7c3aed;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: rgba(139, 92, 246, 0.25);
+            --shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
+        }
         body {
             font-family: 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #2d2d2d;
+            background: var(--bg);
+            
+            
+            color: var(--text);
             min-height: 100vh;
             margin: 0;
             padding: 0;
@@ -266,6 +279,8 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             100% { background-position: 0% 50%; }
         }
         #particles-js {
+            display: none;
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -277,19 +292,19 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             max-width: 95%;
             padding: 15px;
             margin: 15px auto;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
         }
         h1 {
-            color: #4b0082;
+            color: var(--primary-3);
             font-weight: 700;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             text-align: center;
             margin-bottom: 1.5rem;
         }
         h2.h4 {
-            color: #4b0082;
+            color: var(--primary-3);
             font-weight: 600;
             font-size: 1.5rem;
         }
@@ -338,21 +353,21 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
         .table {
             background: #ffffff;
             border-radius: 10px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border);
             width: 100%;
             table-layout: auto;
         }
         .table th, .table td {
             padding: 12px;
-            color: #2d2d2d;
+            color: var(--text);
             vertical-align: middle;
             text-align: center;
             font-size: 0.95rem;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border);
         }
         .table th {
-            background: #f0e6ff;
-            color: #4b0082;
+            background: var(--bg);
+            color: var(--primary-3);
             font-weight: 600;
         }
         .table tbody tr {
@@ -369,87 +384,29 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             background: #f5f5ff;
             transform: scale(1.01);
         }
-        .btn {
-            border-radius: 8px;
-            padding: 6px 12px;
-            transition: all 0.3s ease;
-            border: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 36px;
-            font-size: 0.9rem;
-            gap: 6px;
-            max-width: 200px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-        .btn-sm {
-            padding: 4px 8px;
-            font-size: 0.85rem;
-            height: 32px;
-            max-width: 120px;
-        }
-        .btn-primary {
-            background: #5e2a96;
-            color: #ffffff;
-        }
         .btn-primary:hover {
             background: #4b2078;
             box-shadow: 0 0 10px rgba(94, 42, 150, 0.5);
-        }
-        .btn-success {
-            background: #2e7d32;
-            color: #ffffff;
         }
         .btn-success:hover {
             background: #25632a;
             box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
         }
-        .btn-danger {
-            background: #c62828;
-            color: #ffffff;
-        }
         .btn-danger:hover {
             background: #a90f1f;
             box-shadow: 0 0 10px rgba(198, 40, 40, 0.5);
-        }
-        .btn-warning {
-            background: #ffb300;
-            color: #2d2d2d;
         }
         .btn-warning:hover {
             background: #e6a800;
             box-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
         }
-        .btn-info {
-            background: #0288d1;
-            color: #ffffff;
-        }
         .btn-info:hover {
             background: #015d9b;
             box-shadow: 0 0 10px rgba(2, 136, 209, 0.5);
         }
-        .btn-copy {
-            background: #6c757d;
-            color: #ffffff;
-        }
         .btn-copy:hover {
             background: #5a6268;
             box-shadow: 0 0 10px rgba(108, 117, 125, 0.5);
-        }
-        .form-control, .form-select {
-            background: #fff;
-            border: 1px solid #d1c4e9;
-            color: #2d2d2d;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-weight: 400;
-            height: 36px;
-            font-size: 0.9rem;
-            padding: 8px;
         }
         .form-control:focus, .form-select:focus {
             border-color: #5e2a96;
@@ -473,9 +430,9 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             align-items: center;
         }
         .pagination .pagination-control {
-            background: #f0e6ff;
+            background: var(--bg);
             border: none;
-            color: #4b0082;
+            color: var(--primary-3);
             margin: 0 5px;
             border-radius: 50%;
             transition: all 0.3s;
@@ -538,7 +495,7 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #4b0082;
+            color: var(--primary-3);
             padding: 10px 12px;
             text-decoration: none;
             border-radius: 8px;
@@ -547,7 +504,7 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             font-weight: 500;
         }
         .sidebar-item:hover {
-            background: #f0e6ff;
+            background: var(--bg);
             color: #5e2a96;
             transform: translateX(5px);
         }
@@ -566,11 +523,6 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
             }
             .form-control, .form-select, .btn {
                 width: 100%;
-                max-width: 100%;
-            }
-            .btn {
-                height: 34px;
-                font-size: 0.85rem;
                 max-width: 100%;
             }
             .sidebar {
@@ -602,21 +554,6 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
                 padding: 10px;
                 margin: 8px;
             }
-            .form-control, .form-select {
-                height: 34px;
-                font-size: 0.85rem;
-            }
-            .btn {
-                height: 32px;
-                font-size: 0.8rem;
-                padding: 6px 10px;
-                max-width: 100%;
-            }
-            .btn-sm {
-                height: 30px;
-                font-size: 0.75rem;
-                padding: 4px 8px;
-            }
             .table th, .table td {
                 padding: 8px;
                 font-size: 0.8rem;
@@ -642,19 +579,26 @@ $pending_result = $conn->query("SELECT * FROM pending_users ORDER BY created_at 
                 flex-direction: row;
                 flex-wrap: nowrap;
             }
-            .form-control, .form-select {
-                width: auto;
-                flex-grow: 1;
-            }
-            .btn {
-                font-size: 0.85rem;
-                max-width: 120px;
-            }
             .alert .btn-close {
                 font-size: 1rem;
                 padding: 0.5rem;
             }
         }
+        /* e-Book theme alignment overrides */
+        body { background: var(--bg) !important; color: var(--text) !important; line-height: 1.7; }
+        #particles-js { display: none !important; }
+        .container-fluid { background: var(--surface) !important; border: 1px solid var(--border) !important; box-shadow: var(--shadow) !important; border-radius: 16px !important; }
+        .table th { background: linear-gradient(135deg, #ede9fe, #e9d5ff) !important; color: #4c1d95 !important; font-weight: 700 !important; }
+        .btn { border-radius: 999px !important; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18) !important; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)) !important; color: #ffffff !important; }
+        .btn-primary:hover { box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28) !important; transform: translateY(-1px); }
+        .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: #ffffff !important; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626) !important; color: #ffffff !important; }
+        .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; color: #1f2937 !important; }
+        .btn-info { background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important; color: #ffffff !important; }
+        .btn-copy { background: linear-gradient(135deg, #94a3b8, #64748b) !important; color: #ffffff !important; }
+        .form-control, .form-select { border: 1px solid var(--border) !important; border-radius: 10px !important; box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08) !important; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-2) !important; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important; }
     </style>
 </head>
 <body>

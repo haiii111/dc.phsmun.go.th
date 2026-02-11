@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // logout.php
 session_start();
 include 'db.php';

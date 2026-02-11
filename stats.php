@@ -186,192 +186,130 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
+        <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f5ff;
+            --primary: #a78bfa;
+            --primary-2: #8b5cf6;
+            --primary-3: #7c3aed;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: rgba(139, 92, 246, 0.25);
+            --shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
+        }
         body {
             font-family: 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #2d2d2d;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-size: 1rem;
         }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-        .container {
-            max-width: 90%;
+        #particles-js { display: none; }
+        .container, .container-fluid {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
             padding: 20px;
             margin: 20px auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 1200px;
         }
-        .alert-success {
-            background: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-            border: 1px solid #28a745;
-            margin-top: 63px;
-            padding: 15px 40px 15px 15px;
-            position: relative;
-        }
-        .alert-danger {
-            background: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            border: 1px solid #dc3545;
-            padding: 15px 40px 15px 15px;
-            position: relative;
-        }
-        .alert .btn-close {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%232d2d2d'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3e%3c/svg%3e") center/1em auto no-repeat;
-            opacity: 1;
-            width: 1.5em;
-            height: 1.5em;
-        }
-        h1, h2 {
-            color: #4b0082;
+        h1, h2, h3, h4, h5 {
+            color: var(--primary-3);
             font-weight: 700;
-            font-size: 2.2rem;
-            text-shadow: none;
-        }
-        h2 {
-            font-size: 1.8rem;
-            margin-top: 30px;
         }
         .table {
-            background: #ffffff;
-            border-radius: 10px;
-            border: 1px solid #d1c4e9;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
             width: 100%;
+            table-layout: auto;
+            overflow: hidden;
         }
         .table th, .table td {
-            border: 1px solid #d1c4e9;
-            padding: 10px;
-            color: #2d2d2d;
+            padding: 12px;
+            color: var(--text);
             vertical-align: middle;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            border: 1px solid rgba(139, 92, 246, 0.35);
         }
         .table th {
-            background: #f0e6ff;
-            color: #4b0082;
+            background: linear-gradient(135deg, #ede9fe, #e9d5ff);
+            color: #4c1d95;
             font-weight: 700;
         }
-        .table tbody tr {
-            transition: background 0.3s, transform 0.3s;
-            opacity: 0;
-            transform: translateY(20px);
+        .table tbody tr:hover { background: #f5f3ff; }
+        .form-control, .form-select {
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
+            height: 40px;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08);
         }
-        .table tbody tr.visible {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .table tbody tr:hover {
-            background: #f5f5ff;
-            transform: scale(1.02);
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-2);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
         .btn {
-            border-radius: 10px;
-            padding: 8px 16px;
-            transition: all 0.3s ease;
+            border-radius: 999px;
+            padding: 6px 14px;
             border: none;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             height: 36px;
             font-size: 0.9rem;
-            white-space: nowrap;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18);
         }
-        .btn-primary {
-            background: #5e2a96;
-            color: #ffffff;
-        }
-        .btn-primary:hover {
-            background: #4b2078;
-            box-shadow: 0 0 15px rgba(94, 42, 150, 0.5);
-        }
-        .btn-secondary {
-            background: #6c757d;
-            color: #ffffff;
-        }
-        .btn-secondary:hover {
-            background: #5a6268;
-            box-shadow: 0 0 10px rgba(108, 117, 125, 0.5);
-        }
-        .btn-success {
-            background: #28a745;
-            color: #ffffff;
-        }
-        .btn-success:hover {
-            background: #218838;
-            box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
-        }
-        .form-control, .form-select {
-            background: #ffffff;
-            border: 1px solid #d1c4e9;
-            color: #2d2d2d;
-            border-radius: 10px;
-            transition: all 0.3s;
-            font-weight: 500;
-            height: 36px;
-            font-size: 0.9rem;
-            width: 100%;
-            padding: 8px;
-        }
-        .form-control:focus, .form-select:focus {
-            background: #ffffff;
-            border-color: #5e2a96;
-            box-shadow: 0 0 10px rgba(94, 42, 150, 0.5);
-            color: #2d2d2d;
-        }
-        .input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            width: 100%;
-            align-items: stretch;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; }
+        .btn-secondary { background: linear-gradient(135deg, #a78bfa, #8b5cf6); color: #fff; }
+        .btn-outline-secondary { border: 1px solid var(--border); color: var(--primary-3); }
         .pagination .page-link {
-            background: #f0e6ff;
-            border: none;
-            color: #4b0082;
-            margin: 0 5px;
-            border-radius: 50%;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 0.9rem;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            color: var(--primary-3);
+            border-radius: 10px;
+            font-weight: 600;
         }
-        .pagination .page-link:hover {
-            background: #5e2a96;
-            color: #ffffff;
-        }
+        .pagination .page-link:hover,
         .pagination .page-item.active .page-link {
-            background: #5e2a96;
-            color: #ffffff;
+            background: var(--primary-2);
+            color: #fff;
         }
+        .alert-success {
+            background: rgba(34, 197, 94, 0.12);
+            color: #15803d;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        @media (max-width: 992px) {
+            .container, .container-fluid { margin: 16px; padding: 16px; }
+        }
+            .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); color: #ffffff; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: #ffffff; }
         .sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid #d1c4e9;
+            background: #ffffff;
+            border-right: 1px solid var(--border);
             position: fixed;
             top: 0;
             left: -260px;
@@ -380,56 +318,50 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             height: 100%;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
-            display: block;
+            box-shadow: 8px 0 24px rgba(139, 92, 246, 0.18);
         }
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
         .sidebar-toggle {
             position: fixed;
             top: 20px;
             left: 0;
             width: 40px;
             height: 40px;
-            background: #5e2a96;
-            color: #ffffff;
+            background: var(--primary-2);
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 10px 10px 0;
             z-index: 1001;
             transition: left 0.3s ease-in-out;
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25);
         }
-        .sidebar.active ~ .sidebar-toggle {
-            left: 260px;
-        }
-        .sidebar-toggle:hover {
-            background: #4b2078;
-        }
+        .sidebar.active ~ .sidebar-toggle { left: 260px; }
         .sidebar-content {
             padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: 70px;
+            margin-top: 60px;
         }
         .sidebar-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #4b0082;
+            color: #4c1d95;
             padding: 10px 12px;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
             transition: background 0.2s, transform 0.2s;
-            font-weight: 500;
+            font-weight: 600;
         }
         .sidebar-item:hover {
-            background: #f0e6ff;
-            color: #5e2a96;
-            transform: translateX(5px);
+            background: #f5f3ff;
+            color: var(--primary-3);
+            transform: translateX(4px);
         }
         .popup-overlay {
             position: fixed;
@@ -437,7 +369,7 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(15, 23, 42, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -446,121 +378,20 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
             opacity: 0;
             transition: opacity 0.3s ease-in-out, visibility 0.3s;
         }
-        .popup-overlay.show {
-            visibility: visible;
-            opacity: 1;
-        }
+        .popup-overlay.show { visibility: visible; opacity: 1; }
         .popup-box {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid #d1c4e9;
-            padding: 15px;
-            border-radius: 15px;
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 14px;
             width: 90%;
-            max-width: 400px;
-            min-width: 280px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 420px;
+            box-shadow: var(--shadow);
         }
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #d1c4e9;
-        }
-        .popup-title {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            color: #5e2a96;
-        }
-        .popup-box .btn-close {
-            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%235e2a96'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3e%3c/svg%3e") center/1em auto no-repeat;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #5e2a96;
-        }
-        .popup-body {
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #2d2d2d;
-            font-weight: 500;
-        }
-        .popup-footer {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        @media (max-width: 992px) {
-            .container {
-                padding: 15px;
-            }
-            .input-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .form-control, .form-select, .btn {
-                width: 100%;
-                max-width: none;
-            }
-            .btn {
-                height: 34px;
-                font-size: 0.85rem;
-            }
-            .sidebar {
-                width: 220px;
-                left: -220px;
-            }
-            .sidebar.active ~ .sidebar-toggle {
-                left: 220px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-        @media (max-width: 576px) {
-            body {
-                font-size: 0.9rem;
-            }
-            .container {
-                padding: 10px;
-                margin: 10px;
-            }
-            .form-control, .form-select {
-                height: 32px;
-                font-size: 0.8rem;
-            }
-            .btn {
-                height: 32px;
-                font-size: 0.8rem;
-                padding: 6px 12px;
-            }
-            .table th, .table td {
-                padding: 8px;
-                font-size: 0.75rem;
-            }
-            .sidebar-toggle {
-                width: 35px;
-                height: 35px;
-            }
-        }
-        @media (orientation: landscape) and (max-height: 500px) {
-            .container {
-                padding: 10px;
-            }
-            .input-group {
-                flex-direction: row;
-                flex-wrap: nowrap;
-            }
-            .form-control, .form-select {
-                width: auto;
-                flex-grow: 1;
-            }
-            .btn {
-                font-size: 0.85rem;
-            }
-        }
+        .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .popup-title { margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--primary-3); }
+        .popup-body { margin-bottom: 16px; color: var(--text); }
+        .popup-footer { display: flex; justify-content: flex-end; gap: 8px; }
     </style>
 </head>
 <body>
@@ -979,3 +810,5 @@ $totalYearlyPages = ceil($totalYearly / $itemsPerPage);
     </script>
 </body>
 </html>
+
+

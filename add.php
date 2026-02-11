@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 include 'db.php';
 include 'auth.php';
@@ -330,6 +330,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 font-size: 1rem;
                 padding: 0.5rem;
             }
+        }
+        /* e-Book theme alignment overrides */
+        body { background: var(--bg) !important; color: var(--text) !important; line-height: 1.7; }
+        #particles-js { display: none !important; }
+        .container, .container-fluid { background: var(--surface) !important; border: 1px solid var(--border) !important; box-shadow: var(--shadow) !important; border-radius: 16px !important; }
+        .table th { background: linear-gradient(135deg, #ede9fe, #e9d5ff) !important; color: #4c1d95 !important; font-weight: 700 !important; }
+        .btn { border-radius: 999px !important; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18) !important; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)) !important; color: #ffffff !important; }
+        .btn-primary:hover { box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28) !important; transform: translateY(-1px); }
+        .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a) !important; color: #ffffff !important; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626) !important; color: #ffffff !important; }
+        .btn-warning { background: linear-gradient(135deg, #fbbf24, #f59e0b) !important; color: #1f2937 !important; }
+        .btn-info { background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important; color: #ffffff !important; }
+        .btn-copy { background: linear-gradient(135deg, #94a3b8, #64748b) !important; color: #ffffff !important; }
+        .form-control, .form-control-file, .form-select { border: 1px solid var(--border) !important; border-radius: 10px !important; box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08) !important; height: 40px !important; }
+        .form-control:focus, .form-control-file:focus, .form-select:focus { border-color: var(--primary-2) !important; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2) !important; }
+        /* clearer form card */
+        .form-card {
+            background: #ffffff;
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            border-radius: 16px;
+            padding: 18px 20px;
+            box-shadow: 0 14px 28px rgba(139, 92, 246, 0.18);
+        }
+        .form-label {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .form-text {
+            color: #4b5563;
+        }
+        .form-control, .form-control-file, .form-select {
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.10);
+            color: #111827;
+            font-weight: 500;
+        }
+        .form-control:focus, .form-control-file:focus, .form-select:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
         }
     </style>
 </head>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 // login_logs.php
 // Set timezone to Thailand (Asia/Bangkok)
 date_default_timezone_set('Asia/Bangkok');
@@ -9,6 +9,11 @@ include 'auth.php';
 
 // Check admin access
 checkLogin('admin');
+
+$roleBanner = '';
+if (isAdmin()) {
+    $roleBanner = '<div class="role-banner role-admin"><i class="fas fa-crown"></i>ยินดีต้อนรับ ผู้ดูแลระบบ</div>';
+}
 
 // Database functions
 function get_total_unique_users($filters = []) {
@@ -133,12 +138,23 @@ $total_pages = ceil($total_users / $limit);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f5ff;
+            --primary: #a78bfa;
+            --primary-2: #8b5cf6;
+            --primary-3: #7c3aed;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: rgba(139, 92, 246, 0.25);
+            --shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
+        }
         body {
             font-family: 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #2d2d2d;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             margin: 0;
             padding: 0;
@@ -146,91 +162,84 @@ $total_pages = ceil($total_users / $limit);
             font-size: 1rem;
             display: flex;
             flex-direction: column;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            line-height: 1.7;
         }
         #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            display: none;
         }
         .container-fluid {
-            max-width: 95%;
-            padding: 15px;
-            margin: 15px auto;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            width: 100%;
+            padding: 20px;
+            margin: 0;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(139, 92, 246, 0.45);
         }
         h1 {
-            color: #4b0082;
+            color: var(--primary-3);
             font-weight: 700;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             text-align: center;
             margin-bottom: 1.5rem;
         }
         .table {
-            background: #ffffff;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 2px solid rgba(139, 92, 246, 0.45);
             width: 100%;
             table-layout: auto;
+            overflow: hidden;
         }
         .table th, .table td {
             padding: 12px;
-            color: #2d2d2d;
+            color: var(--text);
             vertical-align: middle;
             text-align: center;
             font-size: 0.95rem;
-            border: 1px solid #e0e0e0;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            line-height: 1.5;
         }
         .table th {
-            background: #f0e6ff;
-            color: #4b0082;
-            font-weight: 600;
+            background: linear-gradient(135deg, #ede9fe, #e9d5ff);
+            color: #4c1d95;
+            font-weight: 700;
         }
         .table tbody tr {
-            transition: background 0.3s, transform 0.3s;
+            transition: background 0.2s ease, transform 0.2s ease;
             opacity: 0;
             transform: translateY(20px);
         }
         .table tbody tr.visible {
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .table tbody tr:hover {
-            background: #f5f5ff;
-            transform: scale(1.01);
+            background: #f5f3ff;
         }
-        .pagination .pagination-control {
-            background: #f0e6ff;
-            border: none;
-            color: #4b0082;
+        .pagination .page-link {
+            background: #ffffff;
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            color: var(--primary-3);
             margin: 0 5px;
-            border-radius: 50%;
-            transition: all 0.3s;
-            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 600;
             font-size: 0.9rem;
+            min-width: 36px;
+            text-align: center;
         }
-        .pagination .pagination-control:hover {
-            background: #5e2a96;
-            color: #fff;
-        }
+        .pagination .page-link:hover,
         .pagination .page-item.active .page-link {
-            background: #5e2a96;
+            background: var(--primary-2);
             color: #fff;
         }
         .sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            border-right: 1px solid #d1c4e9;
-            position: fixed;
+            background: #ffffff;
+            border-right: 1px solid var(--border);
+            position: absolute;
             top: 0;
             left: -260px;
             width: 260px;
@@ -238,31 +247,33 @@ $total_pages = ceil($total_users / $limit);
             height: 100%;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
+            box-shadow: 8px 0 24px rgba(139, 92, 246, 0.18);
         }
         .sidebar.active {
             left: 0;
         }
         .sidebar-toggle {
-            position: fixed;
+            position: absolute;
             top: 20px;
             left: 0;
             width: 40px;
             height: 40px;
-            background: #5e2a96;
+            background: var(--primary-2);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 10px 10px 0;
             z-index: 1001;
             transition: left 0.3s ease-in-out;
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25);
         }
         .sidebar.active ~ .sidebar-toggle {
             left: 260px;
         }
         .sidebar-toggle:hover {
-            background: #4b2078;
+            background: var(--primary-3);
         }
         .sidebar-content {
             padding: 20px;
@@ -275,121 +286,172 @@ $total_pages = ceil($total_users / $limit);
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #4b0082;
+            color: #4c1d95;
             padding: 10px 12px;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95rem;
             transition: background 0.2s, transform 0.2s;
-            font-weight: 500;
+            font-weight: 600;
         }
         .sidebar-item:hover {
-            background: #f0e6ff;
-            color: #5e2a96;
-            transform: translateX(5px);
+            background: #f5f3ff;
+            color: var(--primary-3);
+            transform: translateX(4px);
         }
         .sidebar-item i {
-            font-size: 1.2rem;
-            color: #5e2a96;
+            font-size: 1.1rem;
+            color: var(--primary-2);
         }
-        .form-control, .input-group-text {
+        .form-control, .form-select {
             background: #fff;
-            border: 1px solid #d1c4e9;
-            color: #2d2d2d;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-weight: 400;
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            color: var(--text);
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 600;
             height: 40px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.12);
         }
-        .form-control:focus {
-            border-color: #5e2a96;
-            box-shadow: 0 0 8px rgba(94, 42, 150, 0.3);
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-2);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
             background: #fff;
         }
         .form-control::placeholder {
             color: #999;
         }
-        .input-group-text {
-            background: #f0e6ff;
-            color: #4b0082;
-        }
         .form-label {
             color: #333;
             font-weight: 500;
         }
-        .btn-primary {
-            background: #5e2a96;
-            color: #ffffff;
-            border-radius: 8px;
-            padding: 8px 16px;
-            transition: all 0.3s ease;
+        .btn {
+            border-radius: 0 0 0 12px;
+            padding: 6px 14px;
+            transition: all 0.2s ease;
             border: none;
-            font-weight: 500;
-            height: 40px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 36px;
             font-size: 0.9rem;
+            gap: 6px;
+            max-width: 160px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #ffffff;
         }
         .btn-primary:hover {
-            background: #4b2078;
-            box-shadow: 0 0 10px rgba(94, 42, 150, 0.5);
+            box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28);
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            color: #ffffff;
+        }
+        .form-card {
+            background: var(--surface-2);
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.12);
+        }
+        .popup-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s;
+        }
+        .popup-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .popup-box {
+            background: #fff;
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            padding: 20px;
+            border-radius: 14px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: var(--shadow);
+        }
+        .popup-title {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-3);
+        }
+        .popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .popup-header .btn-close {
+            margin-left: auto;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .role-banner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1100;
+            padding: 10px 16px;
+            border-radius: 0 0 0 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            background: var(--surface);
+            color: var(--primary-3);
+        }
+        .role-banner i {
+            font-size: 0.95rem;
+        }
+        .role-admin {
+            background: linear-gradient(135deg, #ede9fe, #f5f3ff);
         }
         @media (max-width: 992px) {
-            .container-fluid {
-                padding: 12px;
-                margin: 10px;
-            }
-            .sidebar {
-                width: 220px;
-                left: -220px;
-            }
-            .sidebar.active ~ .sidebar-toggle {
-                left: 220px;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            .table th, .table td {
-                font-size: 0.9rem;
-                padding: 10px;
-            }
-            .form-control {
-                font-size: 0.85rem;
-                height: 36px;
-            }
-            .btn-primary {
-                font-size: 0.85rem;
-                height: 36px;
-            }
+            .container-fluid { padding: 16px; margin: 16px; }
+            .sidebar { width: 220px; left: -220px; }
+            .sidebar.active ~ .sidebar-toggle { left: 220px; }
+            h1 { font-size: 2rem; }
+            .table th, .table td { font-size: 0.9rem; padding: 10px; }
+            .form-control, .form-select, .btn { width: 100%; max-width: 100%; }
+            .btn { height: 36px; font-size: 0.85rem; }
         }
         @media (max-width: 576px) {
-            body {
-                font-size: 0.9rem;
-            }
-            .container-fluid {
-                padding: 10px;
-                margin: 8px;
-            }
-            .table th, .table td {
-                padding: 8px;
-                font-size: 0.8rem;
-            }
-            .form-control {
-                font-size: 0.8rem;
-                height: 34px;
-            }
-            .btn-primary {
-                font-size: 0.8rem;
-                height: 34px;
-            }
-            .sidebar-toggle {
-                width: 36px;
-                height: 36px;
-            }
+            body { font-size: 0.92rem; }
+            .container-fluid { padding: 14px; margin: 12px; }
+            .table th, .table td { font-size: 0.85rem; padding: 8px; }
+            .btn { height: 34px; font-size: 0.82rem; }
+            .sidebar-toggle { width: 36px; height: 36px; }
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
+    <?= $roleBanner ?>
     <div class="sidebar">
         <div class="sidebar-content">
             <a href="e-Book.php" class="sidebar-item"><i class="fas fa-home"></i> หน้าหลัก</a>
@@ -405,11 +467,25 @@ $total_pages = ceil($total_users / $limit);
     </div>
     <div class="sidebar-toggle"><i class="fas fa-bars"></i></div>
 
+    <div id="customPopup" class="popup-overlay">
+        <div class="popup-box">
+            <div class="popup-header">
+                <h5 class="popup-title"><i class="fas fa-sign-in-alt me-2"></i>ยืนยันการเข้าสู่ระบบ</h5>
+                <button type="button" class="btn-close" id="closePopup" aria-label="Close"></button>
+            </div>
+            <div class="popup-body">คุณต้องการเข้าสู่ระบบสำหรับเจ้าหน้าที่หรือไม่?</div>
+            <div class="popup-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-secondary" id="closePopupBtn"><i class="fas fa-times me-2"></i>ยกเลิก</button>
+                <a href="login.php" class="btn btn-primary"><i class="fas fa-check me-2"></i>ยืนยัน</a>
+            </div>
+        </div>
+    </div>
+
     <div class="container-fluid mt-5">
         <h1><i class="fas fa-sign-in-alt me-2"></i>บันทึกการลงชื่อเข้าใช้</h1>
         
         <!-- Filter Form -->
-        <form method="GET" class="mb-4">
+        <form method="GET" class="mb-4 form-card">
             <div class="row g-3">
                 <div class="col-md-4">
                     <label for="username" class="form-label"><i class="fas fa-user me-2"></i>ชื่อผู้ใช้</label>
@@ -428,10 +504,10 @@ $total_pages = ceil($total_users / $limit);
                     <input type="date" class="form-control" id="date_end" name="date_end" value="<?= htmlspecialchars($filters['date_end'] ?? '') ?>">
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-2"></i>กรอง</button>
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <a href="login_logs.php" class="btn btn-secondary w-100"><i class="fas fa-undo me-2"></i>ล้างตัวกรอง</a>
+                    <div class="d-flex flex-column flex-sm-row gap-2 w-100">
+                        <button type="submit" class="btn btn-primary flex-grow-1"><i class="fas fa-filter me-2"></i>กรอง</button>
+                        <a href="login_logs.php" class="btn btn-secondary flex-grow-1"><i class="fas fa-undo me-2"></i>ล้างตัวกรอง</a>
+                    </div>
                 </div>
             </div>
         </form>
@@ -482,15 +558,15 @@ $total_pages = ceil($total_users / $limit);
         <nav aria-label="Login log navigation">
             <ul class="pagination justify-content-center">
                 <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="pagination-control" href="?page=<?= $page - 1 ?>&<?= http_build_query($filters) ?>" aria-label="ก่อนหน้า"><i class="fas fa-chevron-left"></i></a>
+                    <a class="page-link" href="?page=<?= $page - 1 ?>&<?= http_build_query($filters) ?>" aria-label="ก่อนหน้า"><i class="fas fa-chevron-left"></i></a>
                 </li>
                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                     <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                        <a class="pagination-control" href="?page=<?= $i ?>&<?= http_build_query($filters) ?>"><?= $i ?></a>
+                        <a class="page-link" href="?page=<?= $i ?>&<?= http_build_query($filters) ?>"><?= $i ?></a>
                     </li>
                 <?php endfor; ?>
                 <li class="page-item <?= ($page >= $total_pages) ? 'disabled' : '' ?>">
-                    <a class="pagination-control" href="?page=<?= $page + 1 ?>&<?= http_build_query($filters) ?>" aria-label="ถัดไป"><i class="fas fa-chevron-right"></i></a>
+                    <a class="page-link" href="?page=<?= $page + 1 ?>&<?= http_build_query($filters) ?>" aria-label="ถัดไป"><i class="fas fa-chevron-right"></i></a>
                 </li>
             </ul>
         </nav>
@@ -525,9 +601,33 @@ $total_pages = ceil($total_users / $limit);
                 });
             }
 
+            const openPopup = document.getElementById("openPopup");
+            const closePopup = document.getElementById("closePopup");
+            const closePopupBtn = document.getElementById("closePopupBtn");
+            const popupOverlay = document.getElementById("customPopup");
+            function closePopupFunc() {
+                if (popupOverlay) popupOverlay.classList.remove("show");
+            }
+            if (openPopup) {
+                openPopup.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    popupOverlay.classList.add("show");
+                });
+            }
+            if (closePopup) closePopup.addEventListener("click", closePopupFunc);
+            if (closePopupBtn) closePopupBtn.addEventListener("click", closePopupFunc);
+            if (popupOverlay) {
+                popupOverlay.addEventListener("click", function (event) {
+                    if (event.target === popupOverlay) closePopupFunc();
+                });
+            }
+
             document.addEventListener("keydown", function (event) {
                 if (event.key === "Escape" && sidebar) {
                     sidebar.classList.remove("active");
+                }
+                if (event.key === "Escape") {
+                    closePopupFunc();
                 }
             });
 
@@ -579,3 +679,5 @@ $total_pages = ceil($total_users / $limit);
     </script>
 </body>
 </html>
+
+

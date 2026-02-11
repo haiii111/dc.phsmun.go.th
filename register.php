@@ -1,32 +1,56 @@
-<?php
+﻿<?php
 session_start();
 include 'db.php';
 
-// ตรวจสอบว่ามีการส่งฟอร์มสมัครสมาชิก
+$success = null;
+$error = null;
+$debugDb = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
+    $username = trim($_POST['username'] ?? '');
+    $passwordRaw = trim($_POST['password'] ?? '');
 
-    // ตรวจสอบว่าชื่อผู้ใช้ซ้ำในตาราง users หรือ pending_users หรือไม่
-    $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? UNION SELECT id FROM pending_users WHERE username = ?");
-    $check_stmt->bind_param("ss", $username, $username);
-    $check_stmt->execute();
-    $check_stmt->store_result();
-
-    if ($check_stmt->num_rows > 0) {
-        $error = "ชื่อผู้ใช้นี้มีอยู่แล้ว กรุณาใช้ชื่ออื่น";
+    if ($username === '' || $passwordRaw === '') {
+        $error = "กรุณากรอกชื่อผู้ใช้และรหัสผ่าน";
     } else {
-        // บันทึกข้อมูลลงตาราง pending_users
-        $stmt = $conn->prepare("INSERT INTO pending_users (username, password, role) VALUES (?, ?, 'user')");
-        $stmt->bind_param("ss", $username, $password);
-        if ($stmt->execute()) {
-            $success = "สมัครสมาชิกสำเร็จ! กรุณารอการอนุมัติจากผู้ดูแลระบบ";
+        $password = password_hash($passwordRaw, PASSWORD_DEFAULT);
+
+        $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? UNION SELECT id FROM pending_users WHERE username = ?");
+        if (!$check_stmt) {
+            $error = "เตรียมคำสั่งตรวจสอบไม่สำเร็จ: " . htmlspecialchars($conn->error);
         } else {
-            $error = "เกิดข้อผิดพลาด: " . htmlspecialchars($stmt->error);
+            $check_stmt->bind_param("ss", $username, $username);
+            $check_stmt->execute();
+            $check_stmt->store_result();
+
+            if ($check_stmt->num_rows > 0) {
+                $error = "ชื่อผู้ใช้นี้มีอยู่แล้ว กรุณาใช้ชื่ออื่น";
+            }
+
+            $check_stmt->close();
         }
-        $stmt->close();
+
+        if (!isset($error)) {
+            $stmt = $conn->prepare("INSERT INTO pending_users (username, password, role) VALUES (?, ?, 'user')");
+            if (!$stmt) {
+                $error = "เตรียมคำสั่งบันทึกไม่สำเร็จ: " . htmlspecialchars($conn->error);
+            } else {
+                $stmt->bind_param("ss", $username, $password);
+                if ($stmt->execute() && $stmt->affected_rows === 1) {
+                    $success = "สมัครสมาชิกสำเร็จ! กรุณารอการอนุมัติจากผู้ดูแลระบบ";
+                } else {
+                    $error = "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง";
+                }
+                $stmt->close();
+            }
+        }
     }
-    $check_stmt->close();
+}
+
+$dbRow = $conn->query("SELECT DATABASE() AS db");
+if ($dbRow && $row = $dbRow->fetch_assoc()) {
+    $debugDb = $row['db'];
+    $dbRow->free();
 }
 ?>
 
@@ -39,70 +63,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f5ff;
+            --primary: #a78bfa;
+            --primary-2: #8b5cf6;
+            --primary-3: #7c3aed;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: rgba(139, 92, 246, 0.25);
+            --shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
+        }
         body {
             font-family: 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #2d2d2d;
+            background: transparent;
+            color: var(--text);
             min-height: 100vh;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
         }
         .container {
-            max-width: 500px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 520px;
+            padding: 24px;
+            background: transparent;
+            border-radius: 16px;
+            box-shadow: none;
+            border: none;
         }
         h1 {
-            color: #4b0082;
+            color: var(--primary-3);
             font-weight: 700;
             text-align: center;
+            margin-bottom: 1.25rem;
         }
         .form-control {
-            border: 1px solid #d1c4e9;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            height: 40px;
+            padding: 8px 12px;
+            box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.08);
         }
         .form-control:focus {
-            border-color: #5e2a96;
-            box-shadow: 0 0 8px rgba(94, 42, 150, 0.3);
+            border-color: var(--primary-2);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
         .btn-primary {
-            background: #5e2a96;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
             color: #fff;
-            border-radius: 8px;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            height: 40px;
+            box-shadow: 0 6px 14px rgba(139, 92, 246, 0.2);
         }
         .btn-primary:hover {
-            background: #4b2078;
-            box-shadow: 0 0 10px rgba(94, 42, 150, 0.5);
+            box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28);
         }
         .alert {
-            border-radius: 8px;
+            border-radius: 10px;
         }
+        a.text-decoration-none { color: var(--primary-3); font-weight: 600; }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div>
     <div class="container mt-5">
         <h1><i class="fas fa-user-plus me-2"></i>สมัครสมาชิก</h1>
         <?php if (isset($success)): ?>
@@ -132,24 +161,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        particlesJS("particles-js", {
-            particles: {
-                number: { value: 60, density: { enable: true, value_area: 800 } },
-                color: { value: "#5e2a96" },
-                shape: { type: "circle" },
-                opacity: { value: 0.4, random: true },
-                size: { value: 3, random: true },
-                line_linked: { enable: true, distance: 150, color: "#5e2a96", opacity: 0.3, width: 1 },
-                move: { enable: true, speed: 2, direction: "none", random: false, straight: false, out_mode: "out" }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-                modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
-            },
-            retina_detect: true
-        });
-    </script>
 </body>
 </html>

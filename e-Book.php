@@ -1,14 +1,14 @@
-<?php
+﻿<?php
 session_start();
 include 'db.php';
 include 'auth.php';
 
+$roleBanner = "";
 if (isAdmin()) {
-    echo "ยินดีต้อนรับ ผู้ดูแลระบบ!👑";
+    $roleBanner = '<div class="role-banner role-admin"><i class="fas fa-crown"></i>ยินดีต้อนรับ ผู้ดูแลระบบ</div>';
 } elseif (isUser()) {
-    echo "ยินดีต้อนรับ บุคคลทั่วไป!👤";
+    $roleBanner = '<div class="role-banner role-user"><i class="fas fa-user"></i>ยินดีต้อนรับ ผู้ใช้ทั่วไป</div>';
 }
-
 $itemsPerPage = isset($_GET['items_per_page']) ? (int)$_GET['items_per_page'] : 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $itemsPerPage;
@@ -60,13 +60,24 @@ $totalPages = ceil($totalItems / $itemsPerPage);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <style>
+        <style>
+        :root {
+            color-scheme: light;
+            --bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f5ff;
+            --primary: #a78bfa;
+            --primary-2: #8b5cf6;
+            --primary-3: #7c3aed;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: rgba(139, 92, 246, 0.25);
+            --shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
+        }
         body {
             font-family: 'Noto Sans Thai', sans-serif;
-            background: linear-gradient(-45deg, #e6e6fa, #f0e6ff, #f5e6ff, #e6e6fa);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: #2d2d2d;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             margin: 0;
             padding: 0;
@@ -74,55 +85,47 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             font-size: 1rem;
             display: flex;
             flex-direction: column;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            line-height: 1.7;
         }
         #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            display: none;
         }
         .container-fluid {
-            max-width: 95%;
-            padding: 15px;
-            margin: 15px auto;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            width: 100%;
+            padding: 20px;
+            margin: 0;
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(139, 92, 246, 0.45);
         }
         h1 {
-            color: #4b0082;
+            color: var(--primary-3);
             font-weight: 700;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             text-align: center;
             margin-bottom: 1.5rem;
         }
         .alert-success {
-            background: rgba(0, 255, 136, 0.1);
-            color: #28a745;
-            border: 1px solid #28a745;
-            border-radius: 8px;
-            padding: 15px;
+            background: rgba(34, 197, 94, 0.12);
+            color: #15803d;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            border-radius: 10px;
+            padding: 14px 16px;
             position: relative;
             margin-top: 63px;
         }
         .alert-danger {
-            background: rgba(255, 85, 85, 0.1);
-            color: #dc3545;
-            border: 1px solid #dc3545;
-            border-radius: 8px;
-            padding: 15px;
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 10px;
+            padding: 14px 16px;
             position: relative;
         }
         .alert .btn-close {
-            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231a1a1a'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3e%3c/svg%3e") center/1em auto no-repeat;
-            color: #1a1a1a;
+            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%231f2937'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3e%3c/svg%3e") center/1em auto no-repeat;
             opacity: 1;
             font-size: 1.1rem;
             padding: 0.75rem;
@@ -133,147 +136,144 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             right: 10px;
             cursor: pointer;
         }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
         .table {
-            background: #ffffff;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 2px solid rgba(139, 92, 246, 0.45);
             width: 100%;
             table-layout: auto;
+            overflow: hidden;
         }
         .table th, .table td {
             padding: 12px;
-            color: #2d2d2d;
+            color: var(--text);
             vertical-align: middle;
             text-align: center;
             font-size: 0.95rem;
-            border: 1px solid #e0e0e0;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            line-height: 1.5;
         }
-        .table th {
-            background: #f0e6ff;
-            color: #4b0082;
-            font-weight: 600;
+                .table td:nth-child(2) {
+            text-align: left;
+        }
+        .table td:nth-child(3) {
+            text-align: center;
+        }
+.table th {
+            background: linear-gradient(135deg, #ede9fe, #e9d5ff);
+            color: #4c1d95;
+            font-weight: 700;
         }
         .table tbody tr {
-            transition: background 0.3s, transform 0.3s;
+            transition: background 0.2s ease, transform 0.2s ease;
             opacity: 0;
             transform: translateY(20px);
         }
         .table tbody tr.visible {
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
         .table tbody tr:hover {
-            background: #f5f5ff;
-            transform: scale(1.01);
+            background: #f5f3ff;
         }
         .btn {
-            border-radius: 8px;
-            padding: 6px 12px;
-            transition: all 0.3s ease;
+            border-radius: 0 0 0 12px;
+            padding: 6px 14px;
+            transition: all 0.2s ease;
             border: none;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             height: 36px;
             font-size: 0.9rem;
             gap: 6px;
-            max-width: 150px;
+            max-width: 160px;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
+            box-shadow: 0 4px 10px rgba(139, 92, 246, 0.18);
         }
         .btn-sm {
-            padding: 4px 8px;
-            font-size: 0.85rem;
+            padding: 4px 10px;
+            font-size: 0.82rem;
             height: 32px;
-            max-width: 120px;
+            max-width: 140px;
         }
         .btn-primary {
-            background: #5e2a96;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
             color: #ffffff;
         }
         .btn-primary:hover {
-            background: #4b2078;
-            box-shadow: 0 0 10px rgba(94, 42, 150, 0.5);
+            box-shadow: 0 10px 18px rgba(139, 92, 246, 0.28);
+            transform: translateY(-1px);
         }
         .btn-success {
-            background: #2e7d32;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #ffffff;
-        }
-        .btn-success:hover {
-            background: #25632a;
-            box-shadow: 0 0 10px rgba(46, 125, 50, 0.5);
         }
         .btn-danger {
-            background: #c62828;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: #ffffff;
-        }
-        .btn-danger:hover {
-            background: #a32121;
-            box-shadow: 0 0 10px rgba(198, 40, 40, 0.5);
         }
         .btn-secondary {
-            background: #6c757d;
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
             color: #ffffff;
         }
-        .btn-secondary:hover {
-            background: #5a6268;
-            box-shadow: 0 0 10px rgba(108, 117, 125, 0.5);
-        }
         .btn-warning {
-            background: #ffb300;
-            color: #2d2d2d;
-        }
-        .btn-warning:hover {
-            background: #e0a800;
-            box-shadow: 0 0 10px rgba(255, 179, 0, 0.5);
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1f2937;
         }
         .form-control, .form-select {
             background: #fff;
-            border: 1px solid #d1c4e9;
-            color: #2d2d2d;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-weight: 400;
-            height: 36px;
-            font-size: 0.9rem;
-            padding: 8px;
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            color: var(--text);
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 600;
+            height: 40px;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            box-shadow: inset 0 1px 2px rgba(139, 92, 246, 0.12);
         }
         .form-control:focus, .form-select:focus {
-            border-color: #5e2a96;
-            box-shadow: 0 0 8px rgba(94, 42, 150, 0.3);
+            border-color: var(--primary-2);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
             background: #fff;
         }
         .input-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
             align-items: center;
         }
         .pagination .page-link {
-            background: #f0e6ff;
-            border: none;
-            color: #4b0082;
+            background: #ffffff;
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            color: var(--primary-3);
             margin: 0 5px;
-            border-radius: 50%;
-            transition: all 0.3s;
-            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 600;
             font-size: 0.9rem;
+            min-width: 36px;
+            text-align: center;
         }
-        .pagination .page-link:hover {
-            background: #5e2a96;
-            color: #fff;
-        }
+        .pagination .page-link:hover,
         .pagination .page-item.active .page-link {
-            background: #5e2a96;
+            background: var(--primary-2);
             color: #fff;
         }
         .sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            border-right: 1px solid #d1c4e9;
-            position: fixed;
+            background: #ffffff;
+            border-right: 1px solid var(--border);
+            position: absolute;
             top: 0;
             left: -260px;
             width: 260px;
@@ -281,31 +281,30 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             height: 100%;
             transition: left 0.3s ease-in-out;
             z-index: 1000;
+            box-shadow: 8px 0 24px rgba(139, 92, 246, 0.18);
         }
         .sidebar.active {
             left: 0;
         }
         .sidebar-toggle {
-            position: fixed;
+            position: absolute;
             top: 20px;
             left: 0;
             width: 40px;
             height: 40px;
-            background: #5e2a96;
+            background: var(--primary-2);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 10px 10px 0;
             z-index: 1001;
             transition: left 0.3s ease-in-out;
+            box-shadow: 0 8px 16px rgba(139, 92, 246, 0.25);
         }
         .sidebar.active ~ .sidebar-toggle {
             left: 260px;
-        }
-        .sidebar-toggle:hover {
-            background: #4b2078;
         }
         .sidebar-content {
             padding: 20px;
@@ -318,30 +317,30 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #4b0082;
+            color: #4c1d95;
             padding: 10px 12px;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.95rem;
             transition: background 0.2s, transform 0.2s;
-            font-weight: 500;
+            font-weight: 600;
         }
         .sidebar-item:hover {
-            background: #f0e6ff;
-            color: #5e2a96;
-            transform: translateX(5px);
+            background: #f5f3ff;
+            color: var(--primary-3);
+            transform: translateX(4px);
         }
         .sidebar-item i {
-            font-size: 1.2rem;
-            color: #5e2a96;
+            font-size: 1.1rem;
+            color: var(--primary-2);
         }
         .popup-overlay {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(15, 23, 42, 0.6);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -356,190 +355,157 @@ $totalPages = ceil($totalItems / $itemsPerPage);
         }
         .popup-box {
             background: #fff;
-            border: 1px solid #d1c4e9;
+            border: 2px solid rgba(139, 92, 246, 0.45);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 14px;
             width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        .popup-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            max-width: 420px;
+            box-shadow: var(--shadow);
         }
         .popup-title {
             margin: 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #4b0082;
-        }
-        .popup-box .btn-close {
-            background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%235e2a96'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707A1 1 0 01.293.293z'/%3e%3c/svg%3e") center/1em auto no-repeat;
-            color: #5e2a96;
-            opacity: 1;
-            font-size: 1.1rem;
-            padding: 0.5rem;
-            width: 1.5em;
-            height: 1.5em;
-            cursor: pointer;
-        }
-        .popup-body {
-            margin-bottom: 20px;
-            font-size: 1rem;
-            color: #2d2d2d;
-        }
-        .popup-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary-3);
         }
         .modal {
             display: none;
-            position: fixed;
+            position: absolute;
             z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         .modal-content {
             max-width: 80vw;
             max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
         }
         .close {
             position: absolute;
             top: 10px;
-            right: 20px;
+            right: 0;
             color: #fff;
             font-size: 1.5rem;
             cursor: pointer;
         }
         .image-thumbnail {
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.2s ease;
             border-radius: 8px;
         }
         .image-thumbnail:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         @media (max-width: 992px) {
-            .container-fluid {
-                padding: 12px;
-                margin: 10px;
-            }
-            .input-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .form-control, .form-select, .btn {
-                width: 100%;
-                max-width: 100%;
-            }
-            .btn {
-                height: 34px;
-                font-size: 0.85rem;
-                max-width: 100%;
-            }
-            .sidebar {
-                width: 220px;
-                left: -220px;
-            }
-            .sidebar.active ~ .sidebar-toggle {
-                left: 220px;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            .table th, .table td {
-                font-size: 0.9rem;
-                padding: 10px;
-            }
-            .alert .btn-close {
-                font-size: 1rem;
-                padding: 0.5rem;
-                width: 1.2em;
-                height: 1.2em;
-            }
+            .container-fluid { padding: 16px; margin: 16px; }
+            .input-group { flex-direction: column; align-items: stretch; }
+            .form-control, .form-select, .btn { width: 100%; max-width: 100%; }
+            h1 { font-size: 2rem; }
         }
         @media (max-width: 576px) {
-            body {
-                font-size: 0.9rem;
-            }
-            .container-fluid {
-                padding: 10px;
-                margin: 8px;
-            }
-            .form-control, .form-select {
-                height: 34px;
-                font-size: 0.85rem;
-            }
-            .btn {
-                height: 32px;
-                font-size: 0.8rem;
-                padding: 6px 10px;
-                max-width: 100%;
-            }
-            .btn-sm {
-                height: 30px;
-                font-size: 0.75rem;
-                padding: 4px 8px;
-            }
-            .table th, .table td {
-                padding: 8px;
-                font-size: 0.8rem;
-            }
-            .popup-box {
-                padding: 15px;
-                max-width: 320px;
-            }
-            .sidebar-toggle {
-                width: 36px;
-                height: 36px;
-            }
-            .d-flex.gap-2 {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .alert .btn-close {
-                font-size: 0.9rem;
-                padding: 0.4rem;
-                width: 1em;
-                height: 1em;
-                top: 8px;
-                right: 8px;
+            body { font-size: 0.92rem; }
+            .container-fluid { padding: 14px; margin: 12px; }
+            .btn { height: 34px; font-size: 0.82rem; }
+            .btn-sm { height: 30px; font-size: 0.74rem; }
+            .table th, .table td { font-size: 0.85rem; padding: 8px; }
+            .table-toolbar { flex-direction: column; align-items: stretch; }
+            .table-toolbar label { width: 100%; }
+            .table-toolbar .form-select { width: 100%; max-width: 100%; }
+            .action-buttons { width: 100%; }
+            .action-buttons .btn { width: 100%; max-width: 100%; }
+        }
+        .role-banner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 1100;
+            padding: 10px 16px;
+            border-radius: 0 0 0 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            background: var(--surface);
+            color: var(--primary-3);
+        }
+        .role-banner i {
+            font-size: 0.95rem;
+        }
+        .role-admin {
+            background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+        }
+        .role-user {
+            background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+            border-color: rgba(14, 165, 233, 0.25);
+            color: #0f172a;
+        }
+        @media (max-width: 768px) {
+            .role-banner {
+                right: 0;
+                right: auto;
+                
             }
         }
-        @media (orientation: landscape) and (max-height: 500px) {
-            .container-fluid {
-                padding: 10px;
-            }
-            .input-group {
-                flex-direction: row;
-                flex-wrap: nowrap;
-            }
-            .form-control, .form-select {
-                width: auto;
-                flex-grow: 1;
-            }
-            .btn {
-                font-size: 0.85rem;
-                max-width: 120px;
-            }
-            .alert .btn-close {
-                font-size: 1rem;
-                padding: 0.5rem;
-            }
+        .form-card {
+            background: var(--surface-2);
+            border: 2px solid rgba(139, 92, 246, 0.45);
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.12);
+        }
+        .popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .popup-header .btn-close {
+            margin-left: auto;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .badge-new {
+            background: linear-gradient(135deg, #f97316, #ef4444);
+            color: #fff;
+            font-size: 0.72rem;
+            padding: 4px 8px;
+            border-radius: 999px;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+        }
+        .badge-new::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -100%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+            transform: skewX(-20deg);
+            animation: badge-shine 2.2s ease-in-out infinite;
+        }
+        @keyframes badge-shine {
+            0% { left: -120%; }
+            60% { left: 120%; }
+            100% { left: 120%; }
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
+    <?= $roleBanner ?>
 
     <?php if (isset($_GET['success'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -577,7 +543,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                 <button type="button" class="btn-close" id="closePopup" aria-label="Close"></button>
             </div>
             <div class="popup-body">คุณต้องการเข้าสู่ระบบสำหรับเจ้าหน้าที่หรือไม่?</div>
-            <div class="popup-footer">
+            <div class="popup-footer d-flex justify-content-center gap-2">
                 <button type="button" class="btn btn-secondary" id="closePopupBtn"><i class="fas fa-times me-2"></i>ยกเลิก</button>
                 <a href="login.php" class="btn btn-success"><i class="fas fa-check me-2"></i>ยืนยัน</a>
             </div>
@@ -587,7 +553,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
 
     <div class="container-fluid mt-5">
         <h1><i class="fas fa-book-open me-2"></i>ชั้นหนังสืออิเล็กทรอนิกส์</h1>
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <div class="form-card d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
             <form class="d-flex flex-column flex-md-row gap-2 w-100" method="GET" action="e-Book.php">
                 <input type="hidden" name="csrf" value="<?= htmlspecialchars(session_id().bin2hex(random_bytes(8))) ?>">
                 <div class="input-group flex-column flex-md-row gap-2">
@@ -605,7 +571,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                             <?php endforeach; ?>
                         </optgroup>
                         <optgroup label="รายละเอียด">
-                            <?php foreach(['2567','2568'] as $y): ?>
+                            <?php foreach(['2567','2568','2569'] as $y): ?>
                                 <option value="details:<?=$y?>" <?=($filter??'')=="details:$y"?'selected':''?>>ปี<?=$y?></option>
                             <?php endforeach; ?>
                         </optgroup>
@@ -619,17 +585,18 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                     <a href="e-Book.php" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> รีเซ็ต</a>
                 </div>
             </form>
-            <div class="d-flex gap-2">
+            <div class="d-flex flex-column flex-sm-row gap-2 action-buttons">
                 <?php if(isAdmin()||isUser()): ?><a href="add.php" class="btn btn-success"><i class="fas fa-plus"></i> เพิ่มข้อมูล</a><?php endif; ?>
                 <?php if(!isGuest()): ?><a href="logout.php" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a><?php endif; ?>
             </div>
         </div>
 
+        <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th colspan="<?= !isGuest() ? 6 : 5 ?>">
-                        <form class="d-flex align-items-center gap-2 justify-content-end" method="GET">
+                        <form class="d-flex align-items-center gap-2 justify-content-end table-toolbar" method="GET">
                             <label for="items_per_page" class="fw-semibold mb-0">แสดงข้อมูลต่อหน้า:</label>
                             <select id="items_per_page" name="items_per_page" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
                                 <option value="5" <?= $itemsPerPage == 5 ? 'selected' : '' ?>>5</option>
@@ -657,9 +624,18 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             <tbody>
                 <?php if ($result->num_rows > 0): ?>
                 <?php foreach ($result as $index => $item): ?>
+                <?php
+                    $createdAt = $item['created_at'] ?? null;
+                    $isNew = $createdAt && (strtotime($createdAt) >= (time() - 2 * 24 * 60 * 60));
+                ?>
                 <tr>
                     <td><?= $offset + $index + 1 ?></td>
-                    <td><?= htmlspecialchars($item['name']) ?></td>
+                    <td>
+                        <span><?= htmlspecialchars($item['name']) ?></span>
+                        <?php if ($isNew): ?>
+                            <span class="badge badge-new ms-2">new</span>
+                        <?php endif; ?>
+                    </td>
                     <td><?= htmlspecialchars($item['details']) ?></td>
                     <td>
                         <?php if ($item['image']): ?>
@@ -687,6 +663,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                 <?php endif; ?>
             </tbody>
         </table>
+        </div>
 
         <nav>
             <ul class="pagination justify-content-center">
@@ -821,5 +798,21 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             });
         });
     </script>
+    <script>
+        setTimeout(function () {
+            var banner = document.querySelector('.role-banner');
+            if (banner) {
+                banner.style.transition = 'opacity 0.3s ease';
+                banner.style.opacity = '0';
+                banner.style.pointerEvents = 'none';
+            }
+        }, 10000);
+        // roleBannerTimer
+    </script>
 </body>
 </html>
+
+
+
+
+
