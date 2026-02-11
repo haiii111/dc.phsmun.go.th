@@ -633,7 +633,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                     <td>
                         <span><?= htmlspecialchars($item['name']) ?></span>
                         <?php if ($isNew): ?>
-                            <span class="badge badge-new ms-2">new</span>
+                            <span class="badge badge-new ms-2">ใหม่ล่าสุด</span>
                         <?php endif; ?>
                     </td>
                     <td><?= htmlspecialchars($item['details']) ?></td>
