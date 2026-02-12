@@ -1,6 +1,6 @@
 ﻿<?php
 session_start();
-include 'db.php';
+// include 'db.php';
 include 'auth.php';
 
 $roleBanner = "";

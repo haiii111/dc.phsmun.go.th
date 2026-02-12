@@ -33,7 +33,28 @@ function login($username, $password) {
     $result = $stmt->get_result();
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
+        $storedPassword = $user['password'];
+        $verified = password_verify($password, $storedPassword);
+        $legacyMatch = false;
+
+        if (!$verified) {
+            if ($password === $storedPassword) {
+                $legacyMatch = true;
+            } elseif (strlen($storedPassword) === 32 && hash_equals($storedPassword, md5($password))) {
+                $legacyMatch = true;
+            }
+        }
+
+        if ($verified || $legacyMatch) {
+            if ($legacyMatch) {
+                $newHash = password_hash($password, PASSWORD_DEFAULT);
+                $update = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+                if ($update) {
+                    $update->bind_param("si", $newHash, $user['id']);
+                    $update->execute();
+                    $update->close();
+                }
+            }
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
