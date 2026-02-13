@@ -409,6 +409,14 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             .form-control, .form-select, .btn { width: 100%; max-width: 100%; }
             h1 { font-size: 2rem; }
         }
+        @media (max-width: 768px) {
+            .container-fluid { padding: 14px; margin: 12px; border-radius: 12px; }
+            .form-card { padding: 12px; }
+            .sidebar { position: fixed; height: 100vh; }
+            .sidebar-toggle { position: fixed; }
+            .pagination { flex-wrap: wrap; gap: 6px; }
+            .alert-success { margin-top: 16px; }
+        }
         @media (max-width: 576px) {
             body { font-size: 0.92rem; }
             .container-fluid { padding: 14px; margin: 12px; }
@@ -420,6 +428,53 @@ $totalPages = ceil($totalItems / $itemsPerPage);
             .table-toolbar .form-select { width: 100%; max-width: 100%; }
             .action-buttons { width: 100%; }
             .action-buttons .btn { width: 100%; max-width: 100%; }
+        }
+        @media (max-width: 640px) {
+            .table thead .table-head-row { display: none; }
+            .table thead, .table thead tr, .table thead th { display: block; width: 100%; }
+            .table tbody, .table tr, .table td { display: block; width: 100%; }
+            .table tr {
+                margin-bottom: 12px;
+                border: 1px solid rgba(139, 92, 246, 0.35);
+                border-radius: 12px;
+                overflow: hidden;
+                background: #fff;
+            }
+            .table td {
+                text-align: right;
+                padding-left: 46%;
+                padding-top: 28px;
+                padding-bottom: 10px;
+                position: relative;
+                border: none;
+                word-break: break-word;
+            }
+            .table td:not(:last-child) {
+                border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            }
+            .table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 12px;
+                top: 8px;
+                width: 44%;
+                text-align: left;
+                font-weight: 600;
+                color: var(--muted);
+            }
+            .table td[colspan] {
+                text-align: center;
+                padding-left: 12px;
+                padding-top: 12px;
+            }
+            .table td[colspan]::before { display: none; }
+            .table td[data-label="ชื่อ"] span,
+            .table td[data-label="รายละเอียด"] {
+                display: block;
+            }
+            .table td .btn { width: 100%; }
+            .table td .btn + .btn { margin-top: 6px; }
+            .image-thumbnail { max-width: 120px; width: 100%; height: auto; }
         }
         .role-banner {
             position: absolute;
@@ -450,9 +505,9 @@ $totalPages = ceil($totalItems / $itemsPerPage);
         }
         @media (max-width: 768px) {
             .role-banner {
-                right: 0;
+                left: 0;
                 right: auto;
-                
+                border-radius: 0 0 12px 0;
             }
         }
         .form-card {
@@ -594,7 +649,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
         <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
-                <tr>
+                <tr class="table-toolbar-row">
                     <th colspan="<?= !isGuest() ? 6 : 5 ?>">
                         <form class="d-flex align-items-center gap-2 justify-content-end table-toolbar" method="GET">
                             <label for="items_per_page" class="fw-semibold mb-0">แสดงข้อมูลต่อหน้า:</label>
@@ -610,7 +665,7 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                         </form>
                     </th>
                 </tr>
-                <tr>
+                  <tr class="table-head-row">
                     <th style="width: 5%;">ลำดับ</th>
                     <th style="width: 35%;">ชื่อ</th>
                     <th style="width: 25%;">รายละเอียด</th>
@@ -629,27 +684,27 @@ $totalPages = ceil($totalItems / $itemsPerPage);
                     $isNew = $createdAt && (strtotime($createdAt) >= (time() - 2 * 24 * 60 * 60));
                 ?>
                 <tr>
-                    <td><?= $offset + $index + 1 ?></td>
-                    <td>
+                    <td data-label="ลำดับ"><?= $offset + $index + 1 ?></td>
+                    <td data-label="ชื่อ">
                         <span><?= htmlspecialchars($item['name']) ?></span>
                         <?php if ($isNew): ?>
                             <span class="badge badge-new ms-2">ใหม่ล่าสุด</span>
                         <?php endif; ?>
                     </td>
-                    <td><?= htmlspecialchars($item['details']) ?></td>
-                    <td>
+                    <td data-label="รายละเอียด"><?= htmlspecialchars($item['details']) ?></td>
+                    <td data-label="รูปภาพ">
                         <?php if ($item['image']): ?>
                         <img src="uploads/<?= htmlspecialchars($item['image']) ?>" alt="Image" width="50" class="image-thumbnail" onclick="openModal('uploads/<?= htmlspecialchars($item['image']) ?>')">
                         <?php endif; ?>
                     </td>
-                    <td>
+                    <td data-label="ไฟล์ PDF">
                         <?php if ($item['pdf_file']): ?>
                         <a href="uploads/<?= htmlspecialchars($item['pdf_file']) ?>" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> เปิดอ่าน</a>
                         <a href="uploads/<?= htmlspecialchars($item['pdf_file']) ?>" download class="btn btn-sm btn-secondary"><i class="fas fa-download"></i> ดาวน์โหลด</a>
                         <?php endif; ?>
                     </td>
                     <?php if (!isGuest()): ?>
-                    <td>
+                    <td data-label="การจัดการ">
                         <a href="edit.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i> แก้ไข</a>
                         <a href="delete.php?id=<?= $item['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('คุณต้องการลบข้อมูลนี้หรือไม่?')"><i class="fas fa-trash"></i> ลบ</a>
                     </td>

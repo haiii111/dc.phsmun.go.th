@@ -76,11 +76,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #2d2d2d;
             min-height: 100vh;
             margin: 0;
-            padding: 0;
+            padding: 24px;
             box-sizing: border-box;
             font-size: 1rem;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         @keyframes gradientBG {
             0% { background-position: 0% 50%; }
@@ -98,13 +100,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .container-fluid {
             max-width: 500px;
             padding: 20px;
-            margin: 20px auto;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 10;
+            width: min(92vw, 500px);
         }
+        .container-fluid.mt-5 { margin-top: 0 !important; }
         h1 {
             color: #4b0082;
             font-weight: 700;
@@ -254,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         @media (max-width: 992px) {
             .container-fluid {
                 padding: 15px;
-                margin: 15px;
+                margin: 0;
             }
             .sidebar {
                 width: 220px;
@@ -278,10 +282,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         @media (max-width: 576px) {
             body {
                 font-size: 0.9rem;
+                padding: 16px;
             }
             .container-fluid {
                 padding: 10px;
-                margin: 10px;
+                margin: 0;
             }
             .form-control, .input-group-text {
                 height: 34px;
@@ -300,7 +305,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         @media (orientation: landscape) and (max-height: 500px) {
             .container-fluid {
                 padding: 10px;
-                margin: 10px;
+                margin: 0;
             }
             .form-control, .input-group-text {
                 height: 34px;

@@ -197,6 +197,80 @@ if ($visitor) {
             padding-top: calc(1rem + 4px);
             padding-bottom: calc(1rem + 4px);
         }
+        .news-section {
+            padding: 70px 0 40px;
+        }
+        .news-grid {
+            row-gap: 24px;
+        }
+        .news-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .news-item {
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            transform: translateY(0);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .news-item img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .service-card img {
+            height: 220px;
+            object-fit: cover;
+            background: #f8fafc;
+        }
+        .service-card img.contain {
+            object-fit: contain;
+            padding: 8px;
+        }
+        .news-content {
+            padding: 16px 18px 18px;
+        }
+        .news-content h5 {
+            margin: 0;
+            font-size: 1.05rem;
+            color: #0f172a;
+        }
+        .news-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 46px rgba(15, 23, 42, 0.16);
+        }
+        .video-card .news-content {
+            padding: 12px 16px 16px;
+        }
+        .video-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .video-embed {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #0b1020;
+        }
+        .video-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+        .video-card p {
+            margin: 10px 0 0;
+            color: #475569;
+            font-size: 0.95rem;
+        }
         /* ปรับระยะห่างสำหรับหน้าจอเล็ก */
         @media (max-width: 768px) {
             .book-section-info {
@@ -231,6 +305,16 @@ if ($visitor) {
             }
             .blockquote .law-item a {
                 font-size: 0.85rem;
+            }
+            .news-section {
+                padding: 50px 0 30px;
+            }
+            .news-item img {
+                height: 200px;
+            }
+            .video-title {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -705,10 +789,10 @@ if ($visitor) {
                         </div>
                         <div class="container news-section">
                             <h4 class="text-center mb-4">ประกาศผลการพิจารณาจัดซื้อจัดจ้าง</h4>
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 mb-6">
+                            <div class="row news-grid">
+                                <div class="col-lg-6 col-md-6 mb-4">
                                     <a href="https://phsmun.go.th/news/?cid=22" class="news-link" target="_blank">
-                                        <div class="news-item">
+                                        <div class="news-item service-card">
                                             <img src="images/ประกาศ.png" alt="News Image 1" class="img-fluid">
                                             <div class="news-content">
                                                 <h5>ประกาศ</h5>
@@ -716,9 +800,9 @@ if ($visitor) {
                                         </div>
                                     </a>
                                 </div>
-                                <div class="col-lg-6 col-md-6 mb-6">
+                                <div class="col-lg-6 col-md-6 mb-4">
                                     <a href="https://phsmun.go.th/news/?cid=3" class="news-link" target="_blank">
-                                        <div class="news-item">
+                                        <div class="news-item service-card">
                                             <img src="images/ข่าวจัด.png" alt="News Image 2" class="img-fluid">
                                             <div class="news-content">
                                                 <h5>ข่าวจัดซื้อจัดจ้าง</h5>
@@ -811,10 +895,10 @@ if ($visitor) {
             <section class="container news-section" id="section_5">
             <div class="container news-section">
                 <h2 class="text-center mb-4">ช่องทางการให้บริการ</h2>
-                <div class="row">
+                <div class="row news-grid">
                     <div class="col-lg-4 col-md-6 mb-4">
                         <a href="https://phsmun.go.th" class="news-link" target="_blank">
-                            <div class="news-item">
+                            <div class="news-item service-card">
                                 <img src="images/3.jpg" alt="News Image 1" class="img-fluid">
                                 <div class="news-content">
                                     <h5>เว็บไซต์เทศบาลนครพิษณุโลก</h5>
@@ -824,8 +908,8 @@ if ($visitor) {
                     </div>
                     <div class="col-lg-4 col-md-6 mb-4">
                         <a href="https://phsmun.go.th/contact" class="news-link" target="_blank">
-                            <div class="news-item">
-                                <img src="images/5.png" alt="News Image 2" class="img-fluid">
+                            <div class="news-item service-card">
+                                <img src="images/5.png" alt="News Image 2" class="img-fluid contain">
                                 <div class="news-content">
                                     <h5>แผนที่ตั้งเทศบาลนครพิษณุโลก</h5>
                                 </div>
@@ -835,7 +919,7 @@ if ($visitor) {
                     <div class="col-lg-4 col-md-6 mb-4">
                         <a href="https://docs.google.com/forms/d/e/1FAIpQLScRTRl6XXbSv4AdoHHVcCGUzwzWdpq5zqQwaCuvqC0OY_4cKQ/viewform?usp=sharing&ouid=110606945034603320638" class="news-link"
                             target="_blank">
-                            <div class="news-item">
+                            <div class="news-item service-card">
                                 <img src="images/4.jpg" alt="News Image 2" class="img-fluid">
                                 <div class="news-content">
                                     <h5>บริการ E-Service</h5>
@@ -843,72 +927,79 @@ if ($visitor) {
                             </div>
                         </a>
                     </div>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="news-item">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h5>วิดีโอประชาสัมพันธ์</h5>
-                                        <button class="btn btn-outline-secondary btn-sm"
-                                            onclick="toggleVideoContent('videoContent1')">
-                                            ซ่อน/แสดงวิดีโอ
-                                        </button>
-                                    </div>
-                                    <div id="videoContent1" style="display: block;">
-                                        <iframe width="370" height="315"
+                </div>
+                <h3 class="text-center mt-4 mb-3">วิดีโอประชาสัมพันธ์</h3>
+                <div class="row news-grid">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="news-item video-card">
+                            <div class="news-content">
+                                <div class="video-title mb-2">
+                                    <h5 class="mb-0">วิดีโอประชาสัมพันธ์</h5>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="toggleVideoContent('videoContent1')">
+                                        ซ่อน/แสดงวิดีโอ
+                                    </button>
+                                </div>
+                                <div id="videoContent1" style="display: block;">
+                                    <div class="video-embed">
+                                        <iframe
                                             src="https://www.youtube.com/embed/-AFQr0ujlWg?start=10"
-                                            title="YouTube video player" frameborder="0"
+                                            title="YouTube video player"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowfullscreen></iframe>
-                                        <a href="https://youtu.be/-AFQr0ujlWg?si=qpRyQVICA1zfmMPL" target="_blank">
-                                            <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
-                                        </a>
                                     </div>
+                                    <a href="https://youtu.be/-AFQr0ujlWg?si=qpRyQVICA1zfmMPL" target="_blank">
+                                        <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="news-item">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h5>วิดีโอประชาสัมพันธ์</h5>
-                                        <button class="btn btn-outline-secondary btn-sm"
-                                            onclick="toggleVideoContent('videoContent2')">
-                                            ซ่อน/แสดงวิดีโอ
-                                        </button>
-                                    </div>
-                                    <div id="videoContent2" style="display: block;">
-                                        <iframe width="370" height="315"
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="news-item video-card">
+                            <div class="news-content">
+                                <div class="video-title mb-2">
+                                    <h5 class="mb-0">วิดีโอประชาสัมพันธ์</h5>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="toggleVideoContent('videoContent2')">
+                                        ซ่อน/แสดงวิดีโอ
+                                    </button>
+                                </div>
+                                <div id="videoContent2" style="display: block;">
+                                    <div class="video-embed">
+                                        <iframe
                                             src="https://www.youtube.com/embed/IERpoyODLQc?si=4zktNFhWeEiIF0CQ"
-                                            title="YouTube video player" frameborder="0"
+                                            title="YouTube video player"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                             referrerpolicy="strict-origin-when-cross-origin"
                                             allowfullscreen></iframe>
-                                        <a href="https://youtu.be/IERpoyODLQc?si=IHjKOz052GnU7l9q" target="_blank">
-                                            <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
-                                        </a>
                                     </div>
+                                    <a href="https://youtu.be/IERpoyODLQc?si=IHjKOz052GnU7l9q" target="_blank">
+                                        <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <div class="news-item">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h5>วิดีโอประชาสัมพันธ์</h5>
-                                        <button class="btn btn-outline-secondary btn-sm"
-                                            onclick="toggleVideoContent('videoContent3')">
-                                            ซ่อน/แสดงวิดีโอ
-                                        </button>
-                                    </div>
-                                    <div id="videoContent3" style="display: block;">
-                                        <iframe width="370" height="315"
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="news-item video-card">
+                            <div class="news-content">
+                                <div class="video-title mb-2">
+                                    <h5 class="mb-0">วิดีโอประชาสัมพันธ์</h5>
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="toggleVideoContent('videoContent3')">
+                                        ซ่อน/แสดงวิดีโอ
+                                    </button>
+                                </div>
+                                <div id="videoContent3" style="display: block;">
+                                    <div class="video-embed">
+                                        <iframe
                                             src="https://www.youtube.com/embed/IrCOl8hfqSU?si=cCQRIhEip_kUkzRh&start=7"
-                                            title="YouTube video player" frameborder="0"
+                                            title="YouTube video player"
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                             referrerpolicy="strict-origin-when-cross-origin"
                                             allowfullscreen></iframe>
-                                        <a href="https://youtu.be/IrCOl8hfqSU?si=5cVRNZ6BgfpdduHi&t=7"
-                                            target="_blank">
-                                            <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
-                                        </a>
                                     </div>
+                                    <a href="https://youtu.be/IrCOl8hfqSU?si=5cVRNZ6BgfpdduHi&t=7" target="_blank">
+                                        <p>คลิกเพื่อรับชมวิดีโอเพิ่มเติม</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
