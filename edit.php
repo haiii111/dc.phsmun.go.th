@@ -1,18 +1,33 @@
-﻿<?php 
-session_start();
+<?php
+function safe_redirect(string $url): void
+{
+    if (!headers_sent()) {
+        header('Location: ' . $url);
+    } else {
+        echo '<script>window.location.href=' . json_encode($url) . ';</script>';
+        echo '<noscript><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"></noscript>';
+    }
+    exit();
+}
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    if (!headers_sent()) {
+        session_start();
+    } else {
+        safe_redirect('login.php');
+    }
+}
 include 'db.php';
 include_once 'auth.php';
 
 // ตรวจสอบสิทธิ์ (ใช้จาก auth.php)
 if (!isAdmin() && !isUser()) { 
-    header('Location: e-Book.php');
-    exit();
+    safe_redirect('e-Book.php');
 }
 
 // ตรวจสอบว่ามี ID ที่จะทำการแก้ไขหรือไม่
 if (!isset($_GET['id'])) {
-    header('Location: e-Book.php?error=ไม่มีข้อมูลที่ต้องการแก้ไข');
-    exit();
+    safe_redirect('e-Book.php?error=ไม่มีข้อมูลที่ต้องการแก้ไข');
 }
 
 $id = $_GET['id'];
@@ -24,8 +39,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header('Location: e-Book.php?error=ไม่พบข้อมูลที่ต้องการแก้ไข');
-    exit();
+    safe_redirect('e-Book.php?error=ไม่พบข้อมูลที่ต้องการแก้ไข');
 }
 
 $item = $result->fetch_assoc();
@@ -75,8 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('ssssi', $name, $details, $imageName, $pdfName, $id);
 
         if ($stmt->execute()) {
-            header('Location: e-Book.php?success=แก้ไขข้อมูลสำเร็จ');
-            exit();
+            safe_redirect('e-Book.php?success=แก้ไขข้อมูลสำเร็จ');
         } else {
             $errors[] = 'บันทึกข้อมูลล้มเหลว: ' . $conn->error;
         }

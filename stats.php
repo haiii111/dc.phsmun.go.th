@@ -1,11 +1,18 @@
-﻿<?php
+<?php
 session_start();
 date_default_timezone_set('Asia/Bangkok');
 include 'auth.php'; // Include auth.php for session management
 
 // Restrict access to Admin and User roles only
 if (isGuest()) {
-    header("Location: login.php?error=คุณต้องเข้าสู่ระบบในฐานะผู้ดูแลหรือผู้ใช้เพื่อดูหน้านี้");
+    $loginError = 'คุณต้องเข้าสู่ระบบในฐานะผู้ดูแลหรือผู้ใช้เพื่อดูหน้านี้';
+    $loginUrl = 'login.php?error=' . rawurlencode($loginError);
+    if (!headers_sent()) {
+        header("Location: $loginUrl");
+    } else {
+        echo '<script>window.location.href=' . json_encode($loginUrl) . ';</script>';
+        echo '<noscript><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8') . '"></noscript>';
+    }
     exit();
 }
 

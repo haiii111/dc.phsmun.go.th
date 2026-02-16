@@ -1,9 +1,15 @@
-﻿<?php
+<?php
 // login_logs.php
 // Set timezone to Thailand (Asia/Bangkok)
 date_default_timezone_set('Asia/Bangkok');
 
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    if (!headers_sent()) {
+        session_start();
+    } else {
+        exit('Unable to start session because output was sent too early.');
+    }
+}
 include 'db.php';
 include 'auth.php';
 

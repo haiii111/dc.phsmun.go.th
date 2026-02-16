@@ -17,7 +17,13 @@ function isGuest() {
 
 function checkLogin($role = null) {
     if (!isset($_SESSION['username']) || ($role && $_SESSION['role'] !== $role)) {
-        header("Location: login.php");
+        $loginUrl = 'login.php';
+        if (!headers_sent()) {
+            header("Location: $loginUrl");
+        } else {
+            echo '<script>window.location.href=' . json_encode($loginUrl) . ';</script>';
+            echo '<noscript><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8') . '"></noscript>';
+        }
         exit;
     }
 }

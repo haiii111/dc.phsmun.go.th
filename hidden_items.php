@@ -1,16 +1,31 @@
-﻿<?php
-session_start();
+<?php
+function safe_redirect(string $url): void
+{
+    if (!headers_sent()) {
+        header('Location: ' . $url);
+    } else {
+        echo '<script>window.location.href=' . json_encode($url) . ';</script>';
+        echo '<noscript><meta http-equiv="refresh" content="0;url=' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"></noscript>';
+    }
+    exit();
+}
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    if (!headers_sent()) {
+        session_start();
+    } else {
+        safe_redirect('login.php?redirect=' . urlencode('hidden_items.php'));
+    }
+}
 include 'db.php';
 include 'auth.php';
 
 // ตรวจสอบการล็อกอินและบทบาท
 if (!isset($_SESSION['role']) || $_SESSION['role'] === 'guest') {
-    header('Location: login.php?redirect=' . urlencode('hidden_items.php'));
-    exit();
+    safe_redirect('login.php?redirect=' . urlencode('hidden_items.php'));
 }
 if (!in_array($_SESSION['role'], ['admin', 'user'])) {
-    header('Location: index.php');
-    exit();
+    safe_redirect('index.php');
 }
 
 // สร้าง CSRF token
@@ -21,8 +36,7 @@ if (!isset($_SESSION['csrf_token'])) {
 // จัดการการลบหลายรายการ (สำหรับแอดมิน)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_selected']) && $_SESSION['role'] === 'admin') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        header('Location: hidden_items.php?error=CSRF token ไม่ถูกต้อง');
-        exit();
+        safe_redirect('hidden_items.php?error=CSRF token ไม่ถูกต้อง');
     }
 
     if (isset($_POST['selected_items']) && is_array($_POST['selected_items'])) {
@@ -49,14 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_selected']) &&
         $stmt->bind_param(str_repeat('i', count($ids)), ...$ids);
         
         if ($stmt->execute()) {
-            header('Location: hidden_items.php?success=ลบข้อมูลที่เลือกสำเร็จ');
+            safe_redirect('hidden_items.php?success=ลบข้อมูลที่เลือกสำเร็จ');
         } else {
-            header('Location: hidden_items.php?error=การลบข้อมูลล้มเหลว');
+            safe_redirect('hidden_items.php?error=การลบข้อมูลล้มเหลว');
         }
-        exit();
     } else {
-        header('Location: hidden_items.php?error=ไม่ได้เลือกข้อมูลใดๆ');
-        exit();
+        safe_redirect('hidden_items.php?error=ไม่ได้เลือกข้อมูลใดๆ');
     }
 }
 
