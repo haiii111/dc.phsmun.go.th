@@ -29,8 +29,8 @@ if (isUser()) {
     $conn->query("CREATE TABLE IF NOT EXISTS items_backup LIKE items");
 
     // **ตรวจสอบและเปลี่ยน ID ใหม่เพื่อป้องกันการซ้ำ**
-    $stmt = $conn->prepare("INSERT INTO items_backup (name, details, image, pdf_file, created_at, hidden)
-                            SELECT name, details, image, pdf_file, created_at, 1 FROM items WHERE id = ?");
+    $stmt = $conn->prepare("INSERT INTO items_backup (name, details, category_id, subcategory_id, fiscal_year, document_date, image, pdf_file, created_at, hidden)
+                            SELECT name, details, category_id, subcategory_id, fiscal_year, document_date, image, pdf_file, created_at, 1 FROM items WHERE id = ?");
     $stmt->bind_param('i', $id);
     
     if ($stmt->execute()) {

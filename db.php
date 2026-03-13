@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Bangkok');
+require_once __DIR__ . '/document_library.php';
 // $host = 'mariadb_dctest';
 // $user = 'admin_dctest';
 // $password = 'DataCenter@2025';
@@ -23,3 +24,4 @@ if ($conn->connect_error) {
 if (!$conn->set_charset('utf8mb4')) {
     die("ตั้งค่า charset ล้มเหลว: " . $conn->error);
 }
+ensure_document_library_schema($conn);

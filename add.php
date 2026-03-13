@@ -9,12 +9,44 @@ if (!isAdmin() && !isUser()) {
     exit();
 }
 
+$categoryMap = get_document_category_map($conn);
+$categories = array_values($categoryMap);
+$subcategoryMap = get_document_subcategory_map($conn);
+$subcategories = get_document_subcategories($conn);
+
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name']);
     $details = trim($_POST['details']);
+    $categoryId = isset($_POST['category_id']) ? (int) $_POST['category_id'] : 0;
+    $subcategoryId = isset($_POST['subcategory_id']) ? (int) $_POST['subcategory_id'] : 0;
+    $fiscalYearInput = trim($_POST['fiscal_year'] ?? '');
+    $documentDateInput = trim($_POST['document_date'] ?? '');
     $image = $_FILES['image'];
     $pdf_file = $_FILES['pdf_file'];
+    $subcategoryId = $subcategoryId > 0 ? $subcategoryId : null;
+    $fiscalYear = $fiscalYearInput === '' ? null : (int) $fiscalYearInput;
+    $documentDate = $documentDateInput === '' ? null : $documentDateInput;
+
+    if ($categoryId <= 0 || !isset($categoryMap[$categoryId])) {
+        $errors[] = 'กรุณาเลือกหมวดข้อมูลตามเอกสาร';
+    }
+
+    if ($subcategoryId !== null) {
+        if (!isset($subcategoryMap[$subcategoryId])) {
+            $errors[] = 'กรุณาเลือกรายละเอียดย่อยของมาตราที่ถูกต้อง';
+        } elseif ((int) $subcategoryMap[$subcategoryId]['category_id'] !== $categoryId) {
+            $errors[] = 'รายละเอียดย่อยที่เลือกไม่อยู่ในหมวดมาตราที่เลือก';
+        }
+    }
+
+    if ($fiscalYearInput !== '' && !preg_match('/^\d{4}$/', $fiscalYearInput)) {
+        $errors[] = 'ปีงบประมาณต้องเป็นตัวเลข 4 หลัก';
+    }
+
+    if ($documentDateInput !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $documentDateInput)) {
+        $errors[] = 'รูปแบบวันที่เอกสารไม่ถูกต้อง';
+    }
 
     // // ตรวจสอบความถูกต้องของฟอร์ม
     // if (empty($name)) {
@@ -50,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // บันทึกข้อมูลลงฐานข้อมูล
     if (empty($errors)) {
-        $stmt = $conn->prepare("INSERT INTO items (name, details, image, pdf_file, created_at) VALUES (?, ?, ?, ?, NOW())");
-        $stmt->bind_param('ssss', $name, $details, $imageName, $pdfName);
+        $stmt = $conn->prepare("INSERT INTO items (name, details, category_id, subcategory_id, fiscal_year, document_date, image, pdf_file, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+        $stmt->bind_param('ssiiisss', $name, $details, $categoryId, $subcategoryId, $fiscalYear, $documentDate, $imageName, $pdfName);
 
         if ($stmt->execute()) {
             header('Location: e-Book.php?success=เพิ่มข้อมูลสำเร็จ');
@@ -428,6 +460,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="file" name="pdf_file" id="pdf_file" class="form-control" accept="application/pdf" aria-describedby="pdfHelp">
                 <div id="pdfHelp" class="form-text">รองรับไฟล์ PDF (สูงสุด 100MB)</div>
             </div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="category_id" class="form-label"><i class="fas fa-folder-tree me-2"></i>หมวดข้อมูลตามกฎหมาย</label>
+                        <select name="category_id" id="category_id" class="form-select" required aria-describedby="categoryHelp">
+                            <option value="">เลือกหมวดข้อมูล</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= (int) $category['id'] ?>" <?= (string) ($category['id']) === (string) ($_POST['category_id'] ?? '') ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars(document_category_label($category)) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div id="categoryHelp" class="form-text">เลือกหมวดตามเอกสารเตรียมข้อมูล PDF เช่น มาตรา 7 หรือ มาตรา 9(1)-(8)</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="subcategory_id" class="form-label"><i class="fas fa-sitemap me-2"></i>รายละเอียดย่อยตามมาตรา</label>
+                        <select name="subcategory_id" id="subcategory_id" class="form-select" aria-describedby="subcategoryHelp">
+                            <option value="">เลือกรายละเอียดย่อย (ถ้ามี)</option>
+                            <?php foreach ($subcategories as $subcategory): ?>
+                                <option
+                                    value="<?= (int) $subcategory['id'] ?>"
+                                    data-category-id="<?= (int) $subcategory['category_id'] ?>"
+                                    <?= (string) ($subcategory['id']) === (string) ($_POST['subcategory_id'] ?? '') ? 'selected' : '' ?>
+                                >
+                                    <?= htmlspecialchars(($subcategory['category_reference'] ?? '') . ' - ' . document_subcategory_label($subcategory)) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div id="subcategoryHelp" class="form-text">ใช้แบ่งเอกสารย่อยภายในมาตราเดียวกันให้ชัดเจนตามไฟล์เตรียมข้อมูล</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <div class="mb-3">
+                        <label for="fiscal_year" class="form-label"><i class="fas fa-calendar-alt me-2"></i>ปีงบประมาณ</label>
+                        <input type="number" name="fiscal_year" id="fiscal_year" class="form-control" min="2500" max="2800" step="1" value="<?= htmlspecialchars($_POST['fiscal_year'] ?? '') ?>" aria-describedby="fiscalYearHelp">
+                        <div id="fiscalYearHelp" class="form-text">เช่น 2569</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <div class="mb-3">
+                        <label for="document_date" class="form-label"><i class="fas fa-calendar-day me-2"></i>วันที่เอกสาร</label>
+                        <input type="date" name="document_date" id="document_date" class="form-control" value="<?= htmlspecialchars($_POST['document_date'] ?? '') ?>" aria-describedby="documentDateHelp">
+                        <div id="documentDateHelp" class="form-text">ระบุเมื่อมีวันที่ประกาศหรือวันที่ออกเอกสาร</div>
+                    </div>
+                </div>
+            </div>
             <div class="d-flex gap-3">
                 <a href="e-Book.php" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>กลับ</a>
                 <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>บันทึกข้อมูล</button>
@@ -464,6 +544,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 toggle.addEventListener("click", function () {
                     sidebar.classList.toggle("active");
                 });
+            }
+
+            const categorySelect = document.getElementById('category_id');
+            const subcategorySelect = document.getElementById('subcategory_id');
+            function syncSubcategoryOptions() {
+                if (!categorySelect || !subcategorySelect) {
+                    return;
+                }
+                const selectedCategoryId = categorySelect.value;
+                const options = Array.from(subcategorySelect.options);
+                let shouldReset = false;
+
+                options.forEach(option => {
+                    if (option.value === '') {
+                        option.hidden = false;
+                        option.disabled = false;
+                        return;
+                    }
+
+                    const matchesCategory = selectedCategoryId !== '' && option.dataset.categoryId === selectedCategoryId;
+                    option.hidden = !matchesCategory;
+                    option.disabled = !matchesCategory;
+                    if (!matchesCategory && option.selected) {
+                        shouldReset = true;
+                    }
+                });
+
+                if (shouldReset) {
+                    subcategorySelect.value = '';
+                }
+
+                subcategorySelect.disabled = selectedCategoryId === '';
+            }
+            if (categorySelect && subcategorySelect) {
+                categorySelect.addEventListener('change', syncSubcategoryOptions);
+                syncSubcategoryOptions();
             }
 
             document.addEventListener("keydown", function (event) {

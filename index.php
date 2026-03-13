@@ -362,7 +362,10 @@ if ($visitor) {
                 <div class="col-lg-6 col-12 mb-5 pb-5 pb-lg-0 mb-lg-0">
                     <h1 class="text-white mb-4">ศูนย์ข้อมูลข่าวสารเทศบาลนครพิษณุโลก</h1>
                     <a href="#section_2" class="btn custom-btn smoothscroll me-3">ความสำคัญของห้องศูนย์ข้อมูล</a>
-                    <a href="#section_3" class="link link--kale smoothscroll">ข่าวประชาสัมพันธ์</a>
+                    <!-- <a href="#section_3" class="link link--kale smoothscroll">ข่าวประชาสัมพันธ์</a> -->
+                    <a href="e-Book.php" class="link link--kale" target="_blank" rel="noopener">หนังสืออิเล็กทรอนิกส์</a>
+                    
+
                 </div>
             </div>
         </div>

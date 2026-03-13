@@ -31,6 +31,10 @@ CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `details` text DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `subcategory_id` int(11) DEFAULT NULL,
+  `fiscal_year` smallint(5) unsigned DEFAULT NULL,
+  `document_date` date DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `pdf_file` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -81,6 +85,57 @@ INSERT INTO `items` (`id`, `name`, `details`, `image`, `pdf_file`, `created_at`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `document_categories`
+--
+
+CREATE TABLE `document_categories` (
+  `id` int(11) NOT NULL,
+  `code` varchar(80) NOT NULL,
+  `reference_label` varchar(60) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `document_categories`
+--
+
+INSERT INTO `document_categories` (`id`, `code`, `reference_label`, `title`, `description`, `sort_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'article-7', 'มาตรา 7', 'ประกาศในราชกิจจานุเบกษาและข้อมูลพื้นฐานของหน่วยงาน', 'โครงสร้างการจัดองค์กร อำนาจหน้าที่ วิธีดำเนินงาน และสถานที่ติดต่อเพื่อขอรับข้อมูลข่าวสาร', 10, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(2, 'article-9-1', 'มาตรา 9(1)', 'ผลการพิจารณาหรือคำวินิจฉัยที่มีผลโดยตรงต่อเอกชน', 'เช่น ผลการพิจารณาอนุญาตก่อสร้าง ดัดแปลง รื้อถอน หรือเคลื่อนย้ายอาคาร', 20, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(3, 'article-9-2', 'มาตรา 9(2)', 'นโยบายหรือการตีความที่ไม่เข้าข่ายมาตรา 7(4)', 'เช่น คำแถลงนโยบายของผู้บริหารท้องถิ่นต่อสภาท้องถิ่นก่อนเข้าปฏิบัติหน้าที่', 30, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(4, 'article-9-3', 'มาตรา 9(3)', 'แผนงาน โครงการ และงบประมาณรายจ่ายประจำปี', 'เช่น แผนการดำเนินงาน โครงการที่อนุมัติแล้ว และเทศบัญญัติหรือข้อบัญญัติงบประมาณ', 40, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(5, 'article-9-4', 'มาตรา 9(4)', 'คู่มือหรือคำสั่งเกี่ยวกับวิธีปฏิบัติงานของเจ้าหน้าที่', 'คู่มือหรือคำสั่งที่มีผลกระทบถึงสิทธิหน้าที่ของเอกชน', 50, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(6, 'article-9-5', 'มาตรา 9(5)', 'สิ่งพิมพ์ที่อ้างอิงตามมาตรา 7 วรรคสอง', 'เอกสารหรือสิ่งพิมพ์ที่กฎหมายกำหนดให้อ้างอิงหรือเปิดเผยเพิ่มเติม', 60, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(7, 'article-9-6', 'มาตรา 9(6)', 'สัญญาสัมปทาน สัญญาผูกขาด หรือสัญญาร่วมทุนกับเอกชน', 'เช่น สัญญากำจัดขยะ สัมปทานเก็บขยะ หรือสัมปทานที่เกี่ยวข้อง', 70, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(8, 'article-9-7', 'มาตรา 9(7)', 'มติคณะรัฐมนตรีหรือมติคณะกรรมการที่แต่งตั้งโดยกฎหมาย', 'รวมถึงมติ ครม. และมติของคณะกรรมการหรือสภาท้องถิ่นที่เกี่ยวข้อง', 80, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+(9, 'article-9-8', 'มาตรา 9(8)', 'ข้อมูลข่าวสารอื่น', 'เช่น ผลการจัดซื้อจัดจ้างรายเดือนแบบ สขร. 1 และข้อมูลเกณฑ์มาตรฐานความโปร่งใส', 90, 1, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `document_subcategories`
+--
+
+CREATE TABLE `document_subcategories` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `code` varchar(120) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `items_backup`
 --
 
@@ -88,6 +143,10 @@ CREATE TABLE `items_backup` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `details` text DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `subcategory_id` int(11) DEFAULT NULL,
+  `fiscal_year` smallint(5) unsigned DEFAULT NULL,
+  `document_date` date DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `pdf_file` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -1106,16 +1165,37 @@ INSERT INTO `visitors` (`id`, `visit_date`, `visit_month`, `visit_year`, `visit_
 --
 
 --
+-- Indexes for table `document_categories`
+--
+ALTER TABLE `document_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_document_categories_code` (`code`),
+  ADD KEY `idx_document_categories_active_sort` (`is_active`,`sort_order`);
+
+--
+-- Indexes for table `document_subcategories`
+--
+ALTER TABLE `document_subcategories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_document_subcategories_code` (`code`),
+  ADD KEY `idx_document_subcategories_category_sort` (`category_id`,`is_active`,`sort_order`);
+
+--
 -- Indexes for table `items`
 --
 ALTER TABLE `items`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_items_category_id` (`category_id`),
+  ADD KEY `idx_items_subcategory_id` (`subcategory_id`),
+  ADD KEY `idx_items_fiscal_year` (`fiscal_year`);
 
 --
 -- Indexes for table `items_backup`
 --
 ALTER TABLE `items_backup`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_items_backup_category_id` (`category_id`),
+  ADD KEY `idx_items_backup_subcategory_id` (`subcategory_id`);
 
 --
 -- Indexes for table `login_logs`
@@ -1147,6 +1227,18 @@ ALTER TABLE `visitors`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `document_categories`
+--
+ALTER TABLE `document_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `document_subcategories`
+--
+ALTER TABLE `document_subcategories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `items`
