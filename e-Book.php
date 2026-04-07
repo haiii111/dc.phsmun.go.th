@@ -1343,8 +1343,8 @@ $cardAccentMap = [
         }
         .document-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 16px;
         }
         .document-card {
             --card-accent: var(--primary);
@@ -1352,8 +1352,9 @@ $cardAccentMap = [
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            padding: 18px 18px 18px 24px;
+            gap: 12px;
+            height: 100%;
+            padding: 14px 14px 16px;
             background: linear-gradient(180deg, rgba(255,255,255,0.99), rgba(248,244,238,0.96));
             border: 1px solid rgba(18, 59, 93, 0.10);
             border-radius: var(--radius-card);
@@ -1366,11 +1367,9 @@ $cardAccentMap = [
         .document-card::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 6px;
-            background: linear-gradient(180deg, var(--card-accent), var(--card-accent));
+            inset: 0 0 auto 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-accent), rgba(182, 146, 77, 0.88));
         }
         .document-card::after {
             content: '';
@@ -1394,20 +1393,20 @@ $cardAccentMap = [
         }
         .document-card-top {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 8px;
         }
         .document-card-index {
-            width: 34px;
-            height: 34px;
-            border-radius: 12px;
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
             background: var(--card-accent-soft);
             color: var(--card-accent);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.78rem;
             font-weight: 700;
             flex: 0 0 auto;
         }
@@ -1418,46 +1417,62 @@ $cardAccentMap = [
         .document-card-title-row {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
         }
         .document-card-title {
-            font-size: 1.04rem;
-            line-height: 1.45;
+            font-size: 0.96rem;
+            line-height: 1.5;
             font-weight: 700;
             color: var(--primary-3);
             margin: 0;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
         }
         .document-card-subtitle {
+            display: none !important;
             color: var(--primary-2);
-            font-size: 0.88rem;
-            margin-top: 6px;
+            font-size: 0.82rem;
+            margin-top: 4px;
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
         }
         .document-card-body {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 96px;
-            gap: 16px;
-            align-items: start;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
         }
         .document-card-description {
             color: var(--text);
-            font-size: 0.93rem;
-            line-height: 1.7;
+            font-size: 0.82rem;
+            line-height: 1.65;
             margin: 0;
             word-break: break-word;
             transition: max-height 0.2s ease;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
         }
         .document-card-details {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         .document-card-insights {
             display: none !important;
         }
         .document-card-media {
-            width: 96px;
-            min-height: 120px;
+            order: -1;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            min-height: 0;
             border-radius: 18px;
             background: linear-gradient(180deg, rgba(18, 59, 93, 0.06), rgba(182, 146, 77, 0.10));
             border: 1px solid rgba(18, 59, 93, 0.10);
@@ -1469,7 +1484,8 @@ $cardAccentMap = [
         .document-card-media img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            background: #fff;
         }
         .document-card-media-placeholder {
             display: flex;
@@ -1498,15 +1514,17 @@ $cardAccentMap = [
         }
         .document-card-footer {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
             gap: 12px;
-            padding-top: 14px;
+            margin-top: auto;
+            padding-top: 12px;
             border-top: 1px solid rgba(18, 59, 93, 0.10);
         }
         .document-card-footer-meta {
             color: var(--muted);
-            font-size: 0.84rem;
+            font-size: 0.77rem;
             font-weight: 600;
         }
         .document-empty {
@@ -1591,19 +1609,21 @@ $cardAccentMap = [
         }
         .btn-action-main {
             max-width: none;
-            min-width: 180px;
+            min-width: 0;
             min-height: var(--btn-height);
         }
         .document-card-actions-primary {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
+            width: 100%;
         }
         .document-card-actions-secondary {
             display: flex;
             flex-wrap: wrap;
-            justify-content: flex-end;
+            justify-content: flex-start;
             gap: 8px;
+            width: 100%;
         }
         .document-card-footer-meta-group {
             display: flex;
@@ -1614,7 +1634,7 @@ $cardAccentMap = [
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.86rem;
+            font-size: 0.8rem;
             color: var(--primary-2);
             font-weight: 600;
         }
@@ -1625,17 +1645,39 @@ $cardAccentMap = [
             overflow: hidden;
         }
         .document-card-description-toggle {
-            width: fit-content;
-            padding: 0;
-            border: none;
-            background: transparent;
-            color: var(--accent-2);
-            font-size: 0.84rem;
-            font-weight: 700;
-            cursor: pointer;
+            display: none;
         }
         .document-card-description-toggle:hover {
             color: var(--primary-2);
+        }
+        .document-card .item-meta-group {
+            gap: 6px;
+        }
+        .document-card .item-pill {
+            min-height: 26px;
+            padding: 0 10px;
+            font-size: 0.72rem;
+        }
+        .document-card .item-pill-category,
+        .document-card .item-pill-subcategory,
+        .document-card-footer-meta-group {
+            display: none !important;
+        }
+        .document-card .badge-new {
+            font-size: 0.68rem;
+            min-height: 24px;
+            padding: 0 8px;
+        }
+        .document-card .btn {
+            min-height: 38px;
+            max-width: none;
+            font-size: 0.82rem;
+        }
+        .document-card .btn-action-main {
+            width: 100%;
+        }
+        .document-card-actions-secondary .btn {
+            flex: 1 1 calc(50% - 4px);
         }
         mark {
             background: rgba(182, 146, 77, 0.26);
@@ -1704,8 +1746,8 @@ $cardAccentMap = [
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .document-card-body {
-                grid-template-columns: 1fr;
+            .document-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
             .filter-status-row {
                 align-items: flex-start;
@@ -1736,7 +1778,20 @@ $cardAccentMap = [
                 display: flex !important;
             }
         }
+        @media (max-width: 1599px) {
+            .document-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 1279px) {
+            .document-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
         @media (max-width: 576px) {
+            .document-grid {
+                grid-template-columns: 1fr;
+            }
             .filter-chip-row,
             .filter-status-actions,
             .document-empty-actions {
@@ -2067,17 +2122,8 @@ $cardAccentMap = [
                                     <span class="badge badge-new">ใหม่ล่าสุด</span>
                                 <?php endif; ?>
                             </div>
-                            <?php if ($subcategoryLabel !== ''): ?>
-                                <div class="document-card-subtitle"><?= $subcategoryLabelHtml ?></div>
-                            <?php endif; ?>
-                            <?php if ($categoryLabel !== '' || !empty($item['fiscal_year'])): ?>
+                            <?php if (!empty($item['fiscal_year'])): ?>
                                 <div class="item-meta-group">
-                                    <?php if ($categoryLabel !== ''): ?>
-                                        <span class="item-pill item-pill-category"><?= htmlspecialchars($categoryLabel) ?></span>
-                                    <?php endif; ?>
-                                    <?php if ($subcategoryLabel !== ''): ?>
-                                        <span class="item-pill item-pill-subcategory"><?= htmlspecialchars($subcategoryLabel) ?></span>
-                                    <?php endif; ?>
                                     <?php if (!empty($item['fiscal_year'])): ?>
                                         <span class="item-pill item-pill-year">ปี <?= htmlspecialchars((string) $item['fiscal_year']) ?></span>
                                     <?php endif; ?>
