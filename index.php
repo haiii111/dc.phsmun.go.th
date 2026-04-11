@@ -338,11 +338,11 @@ if ($visitor) {
                     <li class="nav-item">
                         <a class="nav-link click-scroll" href="#section_2">แนะนำศูนย์ข้อมูล</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link click-scroll" href="#section_3">ข่าวประชาสัมพันธ์</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" style="text-decoration:none" href="e-Book.php" target="_blank">ตารางการค้นหาหนังสือ</a>
+                        <a class="nav-link" style="text-decoration:none" href="e-Book.php" target="_blank">ชั้นหนังสืออิเล็กทรอนิกส์</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link click-scroll" href="#section_5">ช่องทางการให้บริการ</a>
@@ -363,7 +363,7 @@ if ($visitor) {
                     <h1 class="text-white mb-4">ศูนย์ข้อมูลข่าวสารเทศบาลนครพิษณุโลก</h1>
                     <a href="#section_2" class="btn custom-btn smoothscroll me-3">ความสำคัญของห้องศูนย์ข้อมูล</a>
                     <!-- <a href="#section_3" class="link link--kale smoothscroll">ข่าวประชาสัมพันธ์</a> -->
-                    <a href="e-Book.php" class="link link--kale" target="_blank" rel="noopener">หนังสืออิเล็กทรอนิกส์</a>
+                    <a href="e-Book.php" class="link link--kale" target="_blank" rel="noopener">ชั้นหนังสืออิเล็กทรอนิกส์</a>
                     
 
                 </div>
@@ -804,7 +804,7 @@ if ($visitor) {
                                     </a>
                                 </div>
                                 <div class="col-lg-6 col-md-6 mb-4">
-                                    <a href="https://phsmun.go.th/news/?cid=3" class="news-link" target="_blank">
+                                    <a href="https://phsmun.go.th/procurement?category=all" class="news-link" target="_blank">
                                         <div class="news-item service-card">
                                             <img src="images/ข่าวจัด.png" alt="News Image 2" class="img-fluid">
                                             <div class="news-content">
@@ -851,7 +851,7 @@ if ($visitor) {
         }
       </style>
       
-      <section class="author-section section-padding" id="section_3">
+      <!-- <section class="author-section section-padding" id="section_3">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-12 col-12 text-center mt-5 mt-lg-0">
@@ -892,8 +892,8 @@ if ($visitor) {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
       </section>
             <section class="container news-section" id="section_5">
             <div class="container news-section">

@@ -24,6 +24,7 @@ $categoryMap = get_document_category_map($conn);
 $categories = array_values($categoryMap);
 $subcategoryMap = get_document_subcategory_map($conn);
 $subcategories = get_document_subcategories($conn);
+$allowedFiscalYears = range(2565, 2571);
 
 // ตรวจสอบสิทธิ์ (ใช้จาก auth.php)
 if (!isAdmin() && !isUser()) { 
@@ -82,8 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($fiscalYearInput !== '' && !preg_match('/^\d{4}$/', $fiscalYearInput)) {
-        $errors[] = 'ปีงบประมาณต้องเป็นตัวเลข 4 หลัก';
+    if ($fiscalYearInput !== '' && !in_array((int) $fiscalYearInput, $allowedFiscalYears, true)) {
+        $errors[] = 'กรุณาเลือกปีงบประมาณจากรายการที่กำหนด';
     }
 
     if ($documentDateInput !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $documentDateInput)) {
@@ -555,7 +556,12 @@ $pdfExists = !empty($item['pdf_file']) && file_exists($uploadDir . $item['pdf_fi
                 <div class="col-md-3 col-lg-3">
                     <div class="mb-3">
                         <label for="fiscal_year" class="form-label"><i class="fas fa-calendar-alt me-2"></i>ปีงบประมาณ</label>
-                        <input type="number" name="fiscal_year" id="fiscal_year" class="form-control" min="2500" max="2800" step="1" value="<?= htmlspecialchars((string) ($item['fiscal_year'] ?? '')) ?>" aria-describedby="fiscalYearHelp">
+                        <select name="fiscal_year" id="fiscal_year" class="form-select" aria-describedby="fiscalYearHelp">
+                            <option value="">ทุกปีงบประมาณ</option>
+                            <?php foreach ($allowedFiscalYears as $year): ?>
+                                <option value="<?= $year ?>" <?= (string) $year === (string) ($item['fiscal_year'] ?? '') ? 'selected' : '' ?>><?= $year ?></option>
+                            <?php endforeach; ?>
+                        </select>
                         <div id="fiscalYearHelp" class="form-text">เช่น 2569</div>
                     </div>
                 </div>

@@ -58,7 +58,7 @@ if (isAdmin()) {
 } elseif (isUser()) {
     $roleBanner = '<div class="role-banner role-user"><i class="bi bi-person-circle"></i>ยินดีต้อนรับ ผู้ใช้ทั่วไป</div>';
 }
-$ebookFilterKeys = ['search', 'search_field', 'category_id', 'subcategory_id', 'fiscal_year', 'sort', 'items_per_page'];
+$ebookFilterKeys = ['search', 'search_field', 'category_id', 'subcategory_id', 'fiscal_year', 'sort', 'items_per_page', 'view_mode'];
 $defaultFilterState = [
     'search' => '',
     'search_field' => 'all',
@@ -67,6 +67,7 @@ $defaultFilterState = [
     'fiscal_year' => 0,
     'sort' => 'latest',
     'items_per_page' => 50,
+    'view_mode' => 'shelf',
 ];
 $hasIncomingFilterState = false;
 foreach ($ebookFilterKeys as $filterKey) {
@@ -107,6 +108,11 @@ if (!in_array($sort, ['latest', 'year', 'name'], true)) {
     $sort = 'latest';
 }
 
+$viewMode = trim((string) ($requestedFilterState['view_mode'] ?? 'shelf'));
+if (!in_array($viewMode, ['shelf', 'grid', 'list'], true)) {
+    $viewMode = 'shelf';
+}
+
 $categoryId = (int) ($requestedFilterState['category_id'] ?? 0);
 $subcategoryId = (int) ($requestedFilterState['subcategory_id'] ?? 0);
 $fiscalYear = isset($requestedFilterState['fiscal_year']) && preg_match('/^\d{4}$/', (string) $requestedFilterState['fiscal_year'])
@@ -118,6 +124,10 @@ $categoryMap = get_document_category_map($conn);
 $subcategoryMap = get_document_subcategory_map($conn);
 $subcategoryGroups = get_document_subcategories_grouped($conn);
 $fiscalYears = get_document_fiscal_years($conn);
+
+if ($fiscalYear > 0 && !in_array($fiscalYear, $fiscalYears, true)) {
+    $fiscalYear = 0;
+}
 
 if (!isset($categoryMap[$categoryId])) {
     $categoryId = 0;
@@ -155,6 +165,7 @@ $_SESSION['ebook_filter_state'] = [
     'fiscal_year' => $fiscalYear,
     'sort' => $sort,
     'items_per_page' => $itemsPerPage,
+    'view_mode' => $viewMode,
 ];
 
 $sharedWhere = ['items.hidden = 0'];
@@ -214,8 +225,12 @@ if ($selectedSubcategory !== null) {
 $fromClause = ' FROM items LEFT JOIN document_categories dc ON dc.id = items.category_id LEFT JOIN document_subcategories ds ON ds.id = items.subcategory_id ';
 $sharedWhereClause = ' WHERE ' . implode(' AND ', $sharedWhere);
 $whereClause = ' WHERE ' . implode(' AND ', $activeWhere);
+$latestOrderClause = $selectedCategory === null && $selectedSubcategory === null
+    ? ' ORDER BY COALESCE(items.document_date, DATE(items.created_at)) DESC, items.created_at DESC, items.id DESC, COALESCE(dc.sort_order, 999) '
+    : ' ORDER BY COALESCE(items.document_date, DATE(items.created_at)) DESC, items.created_at DESC, items.id DESC ';
+
 $sortOrderMap = [
-    'latest' => ' ORDER BY COALESCE(dc.sort_order, 999), COALESCE(items.document_date, DATE(items.created_at)) DESC, items.created_at DESC ',
+    'latest' => $latestOrderClause,
     'year' => ' ORDER BY COALESCE(items.fiscal_year, 0) DESC, COALESCE(items.document_date, DATE(items.created_at)) DESC, items.created_at DESC ',
     'name' => ' ORDER BY items.name ASC, COALESCE(items.document_date, DATE(items.created_at)) DESC, items.created_at DESC ',
 ];
@@ -345,7 +360,7 @@ if ($totalPages > 0) {
     }
 }
 
-$buildEbookUrl = static function (array $overrides = []) use ($search, $searchField, $categoryId, $subcategoryId, $fiscalYear, $sort, $itemsPerPage, $subcategoryMap): string {
+$buildEbookUrl = static function (array $overrides = []) use ($search, $searchField, $categoryId, $subcategoryId, $fiscalYear, $sort, $itemsPerPage, $viewMode, $subcategoryMap): string {
     $params = [
         'search' => $search,
         'search_field' => $searchField,
@@ -354,6 +369,7 @@ $buildEbookUrl = static function (array $overrides = []) use ($search, $searchFi
         'fiscal_year' => $fiscalYear > 0 ? $fiscalYear : null,
         'sort' => $sort,
         'items_per_page' => $itemsPerPage,
+        'view_mode' => $viewMode,
     ];
 
     foreach ($overrides as $key => $value) {
@@ -372,7 +388,13 @@ $buildEbookUrl = static function (array $overrides = []) use ($search, $searchFi
     }
 
     foreach ($params as $key => $value) {
-        if ($value === null || $value === '' || ($key === 'search_field' && $value === 'all') || ($key === 'sort' && $value === 'latest')) {
+        if (
+            $value === null
+            || $value === ''
+            || ($key === 'search_field' && $value === 'all')
+            || ($key === 'sort' && $value === 'latest')
+            || ($key === 'view_mode' && $value === 'shelf')
+        ) {
             unset($params[$key]);
         }
     }
@@ -386,6 +408,51 @@ $sortLabels = [
     'year' => 'เรียงตามปีงบประมาณ',
     'name' => 'เรียงตามชื่อเอกสาร',
 ];
+
+$viewModeLabels = [
+    'shelf' => 'มุมมองชั้นหนังสือ',
+    'grid' => 'มุมมองตาราง',
+    'list' => 'มุมมองรายการ',
+];
+
+$fetchVisitorTotal = static function (mysqli $conn, string $sql, string $types, array $params): int {
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return 0;
+    }
+
+    if ($types !== '' && $params !== []) {
+        $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $total = 0;
+    if ($result instanceof mysqli_result) {
+        $row = $result->fetch_assoc();
+        $total = (int) ($row['total'] ?? 0);
+        $result->free();
+    }
+    $stmt->close();
+
+    return $total;
+};
+
+$visitorDailyDate = date('Y-m-d');
+$visitorYearTarget = (int) date('Y') + 543;
+$visitorYearStorageValues = array_values(array_unique([$visitorYearTarget, $visitorYearTarget - 543]));
+$dailyVisitorTotal = $fetchVisitorTotal(
+    $conn,
+    'SELECT COALESCE(SUM(count), 0) AS total FROM visitors WHERE visit_date = ?',
+    's',
+    [$visitorDailyDate]
+);
+$yearlyVisitorTotal = $fetchVisitorTotal(
+    $conn,
+    'SELECT COALESCE(SUM(count), 0) AS total FROM visitors WHERE visit_year IN (?, ?)',
+    'ii',
+    [$visitorYearStorageValues[0], $visitorYearStorageValues[1]]
+);
 
 $hasAdvancedFilters = $searchField !== 'all' || $selectedCategory !== null || $selectedSubcategory !== null || $fiscalYear > 0 || $sort !== 'latest';
 $showFilterSummary = $selectedCategory !== null || $selectedSubcategory !== null || $fiscalYear > 0 || $search !== '' || $sort !== 'latest';
@@ -792,38 +859,77 @@ $cardAccentMap = [
             font-weight: 700;
             color: var(--primary-2);
         }
-        .modal {
+        .image-modal {
             display: none;
             position: fixed;
             z-index: 1000;
             inset: 0;
             width: 100vw;
             min-height: 100vh;
-            background: rgba(15, 23, 42, 0.85);
-            align-items: center;
+            min-height: 100dvh;
+            background: rgba(15, 23, 42, 0.92);
+            align-items: flex-start;
             justify-content: center;
-            padding: 32px 20px;
+            padding: max(56px, calc(env(safe-area-inset-top) + 18px)) clamp(10px, 2vw, 28px) clamp(10px, 2vw, 28px);
+            overflow: hidden;
         }
-        .modal-content {
+        .image-modal-content {
             display: block;
             width: auto;
             height: auto;
-            max-width: min(92vw, 1200px);
-            max-height: calc(100vh - 80px);
-            border-radius: 12px;
+            max-width: min(calc(100vw - 24px), 1400px);
+            max-height: calc(100dvh - 24px);
+            border-radius: 14px;
             box-shadow: var(--shadow);
             object-fit: contain;
             margin: auto;
+            background: #fff;
+            image-rendering: auto;
+            opacity: 0;
+            transition: opacity 0.18s ease;
         }
+        .image-modal.is-ready .image-modal-content {
+            opacity: 1;
+        }
+        .image-modal::before {
+            content: 'กำลังโหลดภาพ...';
+            position: absolute;
+            inset: auto auto 18px 50%;
+            transform: translateX(-50%);
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 0.82rem;
+            letter-spacing: 0.01em;
+        }
+        .image-modal.is-ready::before {
+            display: none;
+        }
+        .image-modal-close,
         .close {
             position: fixed;
-            top: 18px;
-            right: 22px;
+            top: max(10px, env(safe-area-inset-top));
+            right: max(12px, env(safe-area-inset-right));
             color: #fff;
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.48);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-size: 2rem;
             line-height: 1;
             cursor: pointer;
             z-index: 1001;
+            backdrop-filter: blur(8px);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .image-modal-close:hover,
+        .close:hover {
+            background: rgba(15, 23, 42, 0.7);
+            transform: scale(1.04);
         }
         .image-thumbnail {
             cursor: pointer;
@@ -859,6 +965,22 @@ $cardAccentMap = [
             .table-toolbar .form-select { width: 100%; max-width: 100%; }
             .action-buttons { width: 100%; }
             .action-buttons .btn { width: 100%; max-width: 100%; }
+            .image-modal {
+                padding: max(48px, calc(env(safe-area-inset-top) + 12px)) 8px 8px;
+            }
+            .image-modal-content {
+                max-width: calc(100vw - 16px);
+                max-height: calc(100dvh - 16px);
+                border-radius: 10px;
+            }
+            .image-modal-close,
+            .close {
+                top: max(8px, env(safe-area-inset-top));
+                right: max(8px, env(safe-area-inset-right));
+                width: 38px;
+                height: 38px;
+                font-size: 1.75rem;
+            }
         }
         @media (max-width: 640px) {
             .table thead .table-head-row { display: none; }
@@ -949,7 +1071,7 @@ $cardAccentMap = [
                 linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 244, 238, 0.96));
             border: 1px solid rgba(18, 59, 93, 0.10);
             border-radius: var(--radius-panel);
-            padding: 20px 22px;
+            padding: 26px 28px;
             box-shadow: var(--shadow-soft);
             position: relative;
             backdrop-filter: blur(14px);
@@ -1033,20 +1155,22 @@ $cardAccentMap = [
             letter-spacing: normal;
             text-transform: none;
             color: var(--muted);
+            margin-bottom: 2px;
         }
         .article-filter-bar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 6px;
         }
         .article-filter-link {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             justify-content: flex-start;
-            gap: 4px;
-            min-height: 74px;
-            padding: 10px 14px;
+            gap: 6px;
+            min-height: 78px;
+            padding: 13px 16px;
             border-radius: var(--radius-chip);
             border: 1px solid rgba(18, 59, 93, 0.10);
             background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,241,232,0.96));
@@ -1139,10 +1263,11 @@ $cardAccentMap = [
         .filter-status-row {
             order: 3;
             margin-top: 0 !important;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.15rem;
         }
         .search-controls-row {
             order: 4;
+            margin-top: 0;
         }
         .category-detail-card {
             border: 1px solid rgba(18, 59, 93, 0.10);
@@ -1230,19 +1355,13 @@ $cardAccentMap = [
             display: flex;
             align-items: flex-start;
             gap: 14px;
+            padding-right: 18px;
         }
-        .library-heading-badge {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            background: linear-gradient(145deg, var(--primary-2), #234a68);
-            color: #fff;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            box-shadow: 0 16px 30px rgba(18, 59, 93, 0.18);
-            border: 1px solid rgba(182, 146, 77, 0.28);
+        .library-heading-logo {
+            display: block;
+            width: clamp(180px, 24vw, 280px);
+            max-width: 100%;
+            height: auto;
         }
         .section-eyebrow {
             display: inline-flex;
@@ -1262,12 +1381,13 @@ $cardAccentMap = [
             opacity: 0.55;
         }
         .section-title {
-            font-size: 1.7rem;
+            font-size: clamp(1.65rem, 1.05rem + 1vw, 2rem);
             font-weight: 700;
             color: var(--primary-3);
-            line-height: 1.2;
-            margin-top: 6px;
-            margin-bottom: 4px;
+            line-height: 1.14;
+            margin-top: 10px;
+            margin-bottom: 0;
+            letter-spacing: -0.01em;
         }
         .section-subtitle {
             color: #5f6b74;
@@ -1287,31 +1407,126 @@ $cardAccentMap = [
             color: var(--primary-2);
             font-weight: 600;
         }
+        .visitor-summary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+        .visitor-summary-card {
+            position: relative;
+            overflow: hidden;
+            padding: 18px 20px;
+            border-radius: 18px;
+            border: 1px solid rgba(18, 59, 93, 0.10);
+            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,232,0.92));
+            box-shadow: var(--shadow-soft);
+        }
+        .visitor-summary-card::before {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--primary-2));
+        }
+        .visitor-summary-label {
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .visitor-summary-value {
+            color: var(--primary-3);
+            font-size: clamp(1.4rem, 1rem + 1vw, 2rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 6px;
+        }
+        .visitor-summary-meta {
+            color: var(--muted);
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
         .results-shell {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
         .results-toolbar {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
-            padding: 16px 18px;
+            gap: 14px;
+            padding: 18px 20px;
             border: 1px solid rgba(18, 59, 93, 0.10);
             border-radius: var(--radius-panel);
             background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,232,0.92));
             box-shadow: var(--shadow-soft);
         }
+        .results-toolbar-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-left: auto;
+        }
+        .view-mode-group,
+        .page-size-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .view-mode-group-label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .view-mode-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px;
+            border-radius: 999px;
+            background: rgba(18, 59, 93, 0.06);
+            border: 1px solid rgba(18, 59, 93, 0.10);
+        }
+        .view-mode-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-height: 36px;
+            padding: 0 12px;
+            border-radius: 999px;
+            color: var(--primary-2);
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .view-mode-button:hover {
+            color: var(--primary-3);
+            transform: translateY(-1px);
+        }
+        .view-mode-button.is-active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #fff;
+            box-shadow: 0 12px 24px rgba(18, 59, 93, 0.18);
+        }
         .results-toolbar-title {
-            font-size: 1rem;
+            font-size: 1.02rem;
             font-weight: 700;
             color: var(--primary-3);
+            margin-bottom: 3px;
         }
         .results-toolbar-subtitle {
             color: var(--muted);
-            font-size: 0.9rem;
+            font-size: 0.92rem;
+            line-height: 1.45;
         }
         .page-size-form {
             display: inline-flex;
@@ -1324,7 +1539,44 @@ $cardAccentMap = [
             font-weight: 600;
         }
         .page-size-form .form-select {
-            min-width: 88px;
+            min-width: 92px;
+        }
+        #ebookFiltersForm {
+            gap: 14px !important;
+        }
+        #ebookFiltersForm .btn,
+        #ebookFiltersForm .form-control,
+        #ebookFiltersForm .form-select {
+            min-height: 44px;
+        }
+        #ebookFiltersForm .form-control,
+        #ebookFiltersForm .form-select {
+            border-radius: 14px;
+            padding-inline: 14px;
+        }
+        .search-controls-primary {
+            align-items: stretch;
+            margin-bottom: 2px;
+        }
+        .search-controls-primary > [class*="col-"],
+        .advanced-filters > [class*="col-"] {
+            display: flex;
+        }
+        .search-controls-primary > [class*="col-"] > .form-control,
+        .search-controls-primary > [class*="col-"] > .btn,
+        .advanced-filters > [class*="col-"] > .form-select {
+            width: 100%;
+        }
+        .advanced-filters {
+            margin-top: 2px;
+            row-gap: 10px;
+        }
+        .filter-chip-row {
+            gap: 10px;
+        }
+        .filter-chip {
+            min-height: 38px;
+            padding: 7px 13px;
         }
         .page-link-nav {
             display: inline-flex;
@@ -1345,6 +1597,89 @@ $cardAccentMap = [
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 16px;
+        }
+        .document-grid.view-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+        .document-grid.view-list {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+        .document-grid.view-list .document-card {
+            display: grid;
+            grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+            grid-template-areas:
+                "media top"
+                "media body"
+                "media primary"
+                "media footer";
+            align-items: start;
+            gap: 12px 18px;
+            padding: 16px 18px 18px;
+        }
+        .document-grid.view-list .document-card-top {
+            grid-area: top;
+        }
+        .document-grid.view-list .document-card-body {
+            grid-area: body;
+        }
+        .document-grid.view-list .document-card-actions-primary {
+            grid-area: primary;
+        }
+        .document-grid.view-list .document-card-footer {
+            grid-area: footer;
+            margin-top: 0;
+        }
+        .document-grid.view-list .document-card-media {
+            grid-area: media;
+            order: 0;
+            height: 100%;
+            min-height: 240px;
+        }
+        .document-grid.view-list .document-card-title {
+            -webkit-line-clamp: 2;
+            font-size: 1.02rem;
+        }
+        .document-grid.view-grid .document-card-title {
+            font-size: 1rem;
+        }
+        .document-grid.view-list .document-card-description,
+        .document-grid.view-grid .document-card-description {
+            -webkit-line-clamp: 4;
+        }
+        .document-grid.view-list .document-card-insights,
+        .document-grid.view-grid .document-card-insights {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .document-grid.view-list .document-card-footer-meta-group,
+        .document-grid.view-grid .document-card-footer-meta-group {
+            display: flex !important;
+        }
+        .document-grid.view-list .document-card-description-toggle,
+        .document-grid.view-grid .document-card-description-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            align-self: flex-start;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--accent-2);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .document-grid.view-grid .document-card,
+        .document-grid.view-list .document-card {
+            padding-top: 16px;
+        }
+        .document-grid.view-grid .document-card .item-pill-category,
+        .document-grid.view-grid .document-card .item-pill-subcategory,
+        .document-grid.view-list .document-card .item-pill-category,
+        .document-grid.view-list .document-card .item-pill-subcategory {
+            display: inline-flex !important;
         }
         .document-card {
             --card-accent: var(--primary);
@@ -1729,13 +2064,15 @@ $cardAccentMap = [
             box-shadow: var(--focus-ring);
         }
         @media (max-width: 768px) {
+            .form-card {
+                padding: 20px 18px;
+            }
             .library-heading {
                 align-items: center;
+                padding-right: 0;
             }
-            .library-heading-badge {
-                width: 44px;
-                height: 44px;
-                border-radius: 14px;
+            .library-heading-logo {
+                width: min(220px, 62vw);
             }
             .section-title {
                 font-size: 1.35rem;
@@ -1746,8 +2083,51 @@ $cardAccentMap = [
                 flex-direction: column;
                 align-items: flex-start;
             }
+            .article-filter-bar {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .results-toolbar-controls,
+            .view-mode-group,
+            .page-size-form {
+                width: 100%;
+            }
+            .results-toolbar-controls {
+                margin-left: 0;
+                justify-content: stretch;
+            }
+            .view-mode-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .view-mode-switcher {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .view-mode-button {
+                flex: 1 1 0;
+                padding: 0 10px;
+            }
             .document-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .document-grid.view-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .document-grid.view-list {
+                grid-template-columns: 1fr;
+            }
+            .document-grid.view-list .document-card {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "top"
+                    "media"
+                    "body"
+                    "primary"
+                    "footer";
+            }
+            .document-grid.view-list .document-card-media {
+                min-height: 0;
+                height: auto;
             }
             .filter-status-row {
                 align-items: flex-start;
@@ -1789,7 +2169,23 @@ $cardAccentMap = [
             }
         }
         @media (max-width: 576px) {
+            .form-card {
+                padding: 18px 14px;
+            }
+            .article-filter-bar {
+                grid-template-columns: 1fr;
+            }
+            .visitor-summary {
+                grid-template-columns: 1fr;
+            }
             .document-grid {
+                grid-template-columns: 1fr;
+            }
+            .document-grid.view-grid {
+                grid-template-columns: 1fr;
+            }
+            .document-grid.view-list .document-card-insights,
+            .document-grid.view-grid .document-card-insights {
                 grid-template-columns: 1fr;
             }
             .filter-chip-row,
@@ -1907,11 +2303,10 @@ $cardAccentMap = [
         <div class="form-card mb-4">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
                 <div class="library-heading">
-                    <div class="library-heading-badge"><i class="bi bi-journal-bookmark"></i></div>
                     <div>
-                        <div class="section-eyebrow">Official Information Center</div>
+                        <img src="images/Phsmunlogo.png" alt="เทศบาลนครพิษณุโลก" class="library-heading-logo">
                         <div class="section-title">ชั้นหนังสืออิเล็กทรอนิกส์</div>
-                        <div class="section-subtitle">หมวดเอกสารตามมาตรา 7 และมาตรา 9(1)-(8) ในรูปแบบที่ค้นหาและตรวจสอบได้ง่าย</div>
+                        <!-- <div class="section-subtitle">หมวดเอกสารตามมาตรา 7 และมาตรา 9(1)-(8) ในรูปแบบที่ค้นหาและตรวจสอบได้ง่าย</div> -->
                     </div>
                 </div>
                 <div class="d-flex flex-column flex-sm-row gap-2 action-buttons">
@@ -2068,25 +2463,45 @@ $cardAccentMap = [
                         <?= $totalItems > 0 ? 'แสดง ' . $visibleFrom . '-' . $visibleTo . ' จากทั้งหมด ' . $totalItems . ' รายการ' : 'ไม่มีข้อมูลเอกสารในเงื่อนไขที่เลือก' ?>
                     </div>
                 </div>
-                <form class="page-size-form" method="GET">
-                    <label for="items_per_page" class="mb-0">แสดงข้อมูลต่อหน้า</label>
-                    <select id="items_per_page" name="items_per_page" class="form-select form-select-sm" onchange="this.form.submit()" aria-label="เลือกจำนวนรายการต่อหน้า">
-                        <option value="30" <?= $itemsPerPage == 30 ? 'selected' : '' ?>>30</option>
-                        <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
-                        <option value="70" <?= $itemsPerPage == 70 ? 'selected' : '' ?>>70</option>
-                        <option value="100" <?= $itemsPerPage == 100 ? 'selected' : '' ?>>100</option>
-                    </select>
-                    <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
-                    <input type="hidden" name="search_field" value="<?= htmlspecialchars($searchField) ?>">
-                    <input type="hidden" name="category_id" value="<?= htmlspecialchars((string) $categoryId) ?>">
-                    <input type="hidden" name="subcategory_id" value="<?= htmlspecialchars((string) $subcategoryId) ?>">
-                    <input type="hidden" name="fiscal_year" value="<?= htmlspecialchars((string) $fiscalYear) ?>">
-                    <input type="hidden" name="sort" value="<?= htmlspecialchars($sort) ?>">
-                </form>
+                <div class="results-toolbar-controls">
+                    <div class="view-mode-group" aria-label="เลือกมุมมองการแสดงผล">
+                        <span class="view-mode-group-label">มุมมอง</span>
+                        <div class="view-mode-switcher">
+                            <a href="<?= htmlspecialchars($buildEbookUrl(['view_mode' => 'shelf', 'page' => null])) ?>" class="view-mode-button <?= $viewMode === 'shelf' ? 'is-active' : '' ?>" aria-label="<?= htmlspecialchars($viewModeLabels['shelf']) ?>">
+                                <i class="bi bi-collection"></i>
+                                <span>ชั้นหนังสือ</span>
+                            </a>
+                            <a href="<?= htmlspecialchars($buildEbookUrl(['view_mode' => 'grid', 'page' => null])) ?>" class="view-mode-button <?= $viewMode === 'grid' ? 'is-active' : '' ?>" aria-label="<?= htmlspecialchars($viewModeLabels['grid']) ?>">
+                                <i class="bi bi-grid-3x3-gap"></i>
+                                <span>ตาราง</span>
+                            </a>
+                            <a href="<?= htmlspecialchars($buildEbookUrl(['view_mode' => 'list', 'page' => null])) ?>" class="view-mode-button <?= $viewMode === 'list' ? 'is-active' : '' ?>" aria-label="<?= htmlspecialchars($viewModeLabels['list']) ?>">
+                                <i class="bi bi-list-ul"></i>
+                                <span>รายการ</span>
+                            </a>
+                        </div>
+                    </div>
+                    <form class="page-size-form" method="GET">
+                        <label for="items_per_page" class="mb-0">แสดงข้อมูลต่อหน้า</label>
+                        <select id="items_per_page" name="items_per_page" class="form-select form-select-sm" onchange="this.form.submit()" aria-label="เลือกจำนวนรายการต่อหน้า">
+                            <option value="30" <?= $itemsPerPage == 30 ? 'selected' : '' ?>>30</option>
+                            <option value="50" <?= $itemsPerPage == 50 ? 'selected' : '' ?>>50</option>
+                            <option value="70" <?= $itemsPerPage == 70 ? 'selected' : '' ?>>70</option>
+                            <option value="100" <?= $itemsPerPage == 100 ? 'selected' : '' ?>>100</option>
+                        </select>
+                        <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+                        <input type="hidden" name="search_field" value="<?= htmlspecialchars($searchField) ?>">
+                        <input type="hidden" name="category_id" value="<?= htmlspecialchars((string) $categoryId) ?>">
+                        <input type="hidden" name="subcategory_id" value="<?= htmlspecialchars((string) $subcategoryId) ?>">
+                        <input type="hidden" name="fiscal_year" value="<?= htmlspecialchars((string) $fiscalYear) ?>">
+                        <input type="hidden" name="sort" value="<?= htmlspecialchars($sort) ?>">
+                        <input type="hidden" name="view_mode" value="<?= htmlspecialchars($viewMode) ?>">
+                    </form>
+                </div>
             </div>
 
             <?php if ($items !== []): ?>
-            <div class="document-grid">
+            <div class="document-grid view-<?= htmlspecialchars($viewMode) ?>">
                 <?php foreach ($items as $index => $item): ?>
                 <?php
                     $createdAt = $item['created_at'] ?? null;
@@ -2252,11 +2667,23 @@ $cardAccentMap = [
         <?php endif; ?>
 
         <p class="text-end records-summary">จำนวนข้อมูลทั้งหมด: <?= $totalItems ?> รายการ</p>
+        <div class="visitor-summary" aria-label="สรุปยอดผู้เข้าชม">
+            <div class="visitor-summary-card">
+                <div class="visitor-summary-label">ยอดผู้เข้าชมประจำวัน</div>
+                <div class="visitor-summary-value"><?= number_format($dailyVisitorTotal) ?></div>
+                <div class="visitor-summary-meta">อ้างอิงวันที่ <?= htmlspecialchars($visitorDailyDate) ?></div>
+            </div>
+            <div class="visitor-summary-card">
+                <div class="visitor-summary-label">ยอดผู้เข้าชมประจำปี</div>
+                <div class="visitor-summary-value"><?= number_format($yearlyVisitorTotal) ?></div>
+                <div class="visitor-summary-meta">รวมสถิติของปี <?= number_format($visitorYearTarget) ?></div>
+            </div>
+        </div>
     </div>
 
-    <div id="imageModal" class="modal">
+    <div id="imageModal" class="image-modal">
         <span class="close">×</span>
-        <img class="modal-content" id="fullImage">
+        <img class="image-modal-content" id="fullImage">
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -2360,7 +2787,7 @@ $cardAccentMap = [
 
                 const placeholderOption = document.createElement("option");
                 placeholderOption.value = "";
-                placeholderOption.textContent = canSelectSubcategory ? "ทุกรายละเอียดย่อย" : "เลือกมาตราก่อน";
+                placeholderOption.textContent = canSelectSubcategory ? "ทุกรายละเอียดย่อย" : "กรุณาเลือกมาตราก่อน";
                 subcategoryFilter.appendChild(placeholderOption);
 
                 nextOptions.forEach((optionItem) => {
@@ -2487,7 +2914,7 @@ $cardAccentMap = [
 
             const modal = document.getElementById("imageModal");
             const fullImage = document.getElementById("fullImage");
-            const closeButton = document.querySelector(".close");
+            const closeButton = document.querySelector("#imageModal .image-modal-close, #imageModal .close");
 
             if (closeButton) {
                 closeButton.textContent = "×";
@@ -2498,6 +2925,7 @@ $cardAccentMap = [
                     return;
                 }
 
+                modal.classList.remove("is-ready");
                 fullImage.src = src;
                 fullImage.style.width = "";
                 fullImage.style.height = "";
@@ -2519,6 +2947,20 @@ $cardAccentMap = [
                 modal.addEventListener("click", function (event) {
                     if (event.target === modal) {
                         closeModal();
+                    }
+                });
+            }
+
+            if (fullImage) {
+                fullImage.addEventListener("load", function () {
+                    if (modal) {
+                        modal.classList.add("is-ready");
+                    }
+                });
+
+                fullImage.addEventListener("error", function () {
+                    if (modal) {
+                        modal.classList.add("is-ready");
                     }
                 });
             }

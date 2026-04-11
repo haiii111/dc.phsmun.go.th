@@ -779,17 +779,7 @@ function get_document_subcategories_grouped(mysqli $conn, bool $activeOnly = tru
 
 function get_document_fiscal_years(mysqli $conn): array
 {
-    $years = [];
-    $result = $conn->query('SELECT DISTINCT fiscal_year FROM items WHERE fiscal_year IS NOT NULL ORDER BY fiscal_year DESC');
-    if (!$result instanceof mysqli_result) {
-        return $years;
-    }
-
-    while ($row = $result->fetch_assoc()) {
-        $years[] = (int) $row['fiscal_year'];
-    }
-
-    return $years;
+    return range(2565, 2571);
 }
 
 function document_category_label(array $category): string
