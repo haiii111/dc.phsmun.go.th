@@ -1,0 +1,95 @@
+# ==============================================================================
+# 🛡️ THE ENTERPRISE .htaccess SECURITY SHIELD FOR 'OR'
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. SERVER HARDENING (ปกปิดตัวตนและโครงสร้าง)
+# ------------------------------------------------------------------------------
+ServerSignature Off
+Options -Indexes -Includes -ExecCGI
+
+# ------------------------------------------------------------------------------
+# 2. BLOCK SENSITIVE FILES (ซ่อนไฟล์ระบบ)
+# ------------------------------------------------------------------------------
+<FilesMatch "^\.|\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist|env|git|htaccess|htpasswd)$">
+    Require all denied
+</FilesMatch>
+
+# ------------------------------------------------------------------------------
+# 3. HTTP METHOD RESTRICTION (อนุญาตเฉพาะ Method ที่จำเป็น)
+# ------------------------------------------------------------------------------
+<LimitExcept GET POST HEAD>
+    Require all denied
+</LimitExcept>
+
+# ------------------------------------------------------------------------------
+# 4. ENTERPRISE SECURITY HEADERS & COOKIE SECURITY
+# ------------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+
+    # [อัปเกรด] บังคับให้ Cookie ปลอดภัยขึ้น (ป้องกันการถูกขโมย Session)
+    # *คำเตือน: หากรันบน localhost (http) ให้ใส่ # หน้าบรรทัดนี้ไว้ก่อน
+    Header edit Set-Cookie ^(.*)$ "$1; HttpOnly; Secure; SameSite=Strict"
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 5. FORCE HTTPS (บังคับเข้ารหัสข้อมูลเสมอ - จำเป็นมากสำหรับ Enterprise)
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # *คำเตือน: หากยังไม่มี SSL/HTTPS (รันบน localhost ธรรมดา) ให้ใส่ # หน้า 2 บรรทัดล่างนี้
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 6. BLOCK BAD BOTS & VULNERABILITY SCANNERS (บล็อกเครื่องมือแฮกอัตโนมัติ)
+# ------------------------------------------------------------------------------
+<IfModule mod_setenvif.c>
+    # แบน User-Agent ที่เป็นเครื่องมือเจาะระบบ (Nmap, SQLMap, Nikto, DirBuster ฯลฯ)
+    SetEnvIfNoCase User-Agent "Acunetix|sqlmap|nmap|nikto|dirbuster|pangolin|nessus|wget|curl|python" bad_bot
+    <RequireAll>
+        Require all granted
+        Require not env bad_bot
+    </RequireAll>
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 7. ADVANCED WAF & UPLOAD PROTECTION (สกัดกั้นการรันโค้ดและคำสั่งระดับสูง)
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # [จุดตาย 1] บล็อกการรันสคริปต์ในโฟลเดอร์ uploads
+    RewriteRule ^uploads/.*\.(php|php[3-8]|phtml|pl|py|jsp|asp|sh|cgi|html|htm|js|exe|bat)$ - [F,L,NC]
+
+    # [จุดตาย 2] บล็อก URL ที่มีคำสั่งอันตราย (SQLi & XSS)
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (eval\(|base64_|exec\(|system\() [NC,OR]
+    RewriteCond %{QUERY_STRING} (UNION.*SELECT|CONCAT\(|INFORMATION_SCHEMA) [NC,OR]
+    
+    # [อัปเกรด] บล็อก Path Traversal (LFI/RFI) ป้องกันการพยายามเปิดไฟล์ระดับ OS เช่น /etc/passwd
+    RewriteCond %{QUERY_STRING} (\.\./|\.\.|%2e%2e%2f|%2e%2e/) [NC,OR]
+    RewriteCond %{QUERY_STRING} (boot\.ini|etc/passwd|windows/win\.ini) [NC]
+    
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# 8. ANTI-HOTLINKING (ป้องกันเว็บอื่นดึงรูป/เอกสารไปใช้ ลดภาระเซิร์ฟเวอร์)
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?http://192.168.180.5/ [NC]
+    # *เมื่อนำขึ้นเซิร์ฟเวอร์จริง ให้เปลี่ยน localhost ด้านบนเป็นชื่อโดเมนของคุณ เช่น yourdomain.com
+    RewriteRule \.(jpg|jpeg|png|gif|pdf|doc|docx)$ - [F,NC]
+</IfModule>
+
+#Apache config ด้วย AllowOverride All

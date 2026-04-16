@@ -496,7 +496,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="col-md-3 col-lg-3">
                     <div class="mb-3">
                         <label for="fiscal_year" class="form-label"><i class="fas fa-calendar-alt me-2"></i>ปีงบประมาณ</label>
-                        <input type="number" name="fiscal_year" id="fiscal_year" class="form-control" min="2500" max="2800" step="1" value="<?= htmlspecialchars($_POST['fiscal_year'] ?? '') ?>" aria-describedby="fiscalYearHelp">
+                        <select name="fiscal_year" id="fiscal_year" class="form-select" aria-describedby="fiscalYearHelp">
+                            <option value="">เลือกปีงบประมาณ</option>
+                            <?php foreach (['2566', '2567', '2568', '2569', '2570', '2571'] as $year): ?>
+                                <option value="<?= $year ?>" <?= ($year === ($_POST['fiscal_year'] ?? '')) ? 'selected' : '' ?>>
+                                    <?= $year ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                         <div id="fiscalYearHelp" class="form-text">เช่น 2569</div>
                     </div>
                 </div>
